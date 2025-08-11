@@ -74,7 +74,7 @@ const difficultyConfig = {
         scamCountMultiplier: 1.0,
         hintMultiplier: 1.0,
         mistakeTolerance: 2,
-        bossLevelMistakeTolerance: 0
+        bossLevelMistakeTolerance: 0 
     },
     hard: {
         timeMultiplier: 0.7,
@@ -124,37 +124,9 @@ const getInitialGameState = () => ({
 
 let gameState = getInitialGameState();
 
-// DOM Elements
-const pages = {
-    landing: document.getElementById('landingPage'),
-    backstory: document.getElementById('backstoryPage'),
-    level: document.getElementById('levelPages'),
-    end: document.getElementById('endScreen')
-};
-
-const elements = {
-    currentLevel: document.getElementById('currentLevel'),
-    levelProgress: document.getElementById('levelProgress'),
-    timer: document.getElementById('timer'),
-    evidenceCount: document.getElementById('evidenceCount'),
-    hintCount: document.getElementById('hintCount'),
-    hintBtn: document.getElementById('hintBtn'),
-    itemsGrid: document.getElementById('itemsGrid'),
-    evidenceBoard: document.getElementById('evidenceBoard'),
-    levelCompletePopup: document.getElementById('levelCompletePopup'),
-    completedLevel: document.getElementById('completedLevel'),
-    levelAccuracy: document.getElementById('levelAccuracy'),
-    levelTimeBonus: document.getElementById('levelTimeBonus'),
-    levelEvidence: document.getElementById('levelEvidence'),
-    finalAccuracy: document.getElementById('finalAccuracy'),
-    totalEvidence: document.getElementById('totalEvidence'),
-    totalMistakes: document.getElementById('totalMistakes'),
-    totalHints: document.getElementById('totalHints'),
-    badgeSection: document.getElementById('badgeSection'),
-    correctSound: document.getElementById('correctSound'),
-    incorrectSound: document.getElementById('incorrectSound'),
-    levelCompleteSound: document.getElementById('levelCompleteSound')
-};
+// DOM Elements - will be initialized after DOM loads
+let pages = {};
+let elements = {};
 
 // Educational hint messages
 const scamEducation = {
@@ -178,19 +150,7 @@ const scamEducation = {
     ]
 };
 
-// Event Listeners
-document.getElementById('startGameBtn').addEventListener('click', () => showPage('backstory'));
-document.getElementById('beginInvestigationBtn').addEventListener('click', startGameFromDifficulty);
-document.getElementById('hintBtn').addEventListener('click', useHint);
-document.getElementById('endLevelBtn').addEventListener('click', () => processLevelEnd(false));
-document.getElementById('nextLevelBtn').addEventListener('click', nextLevel);
-document.getElementById('playAgainBtn').addEventListener('click', resetGame);
-document.getElementById('backToMenuBtn').addEventListener('click', () => showPage('landing'));
-
-// Difficulty selection event listeners
-document.querySelectorAll('.difficulty-btn').forEach(btn => {
-    btn.addEventListener('click', () => selectDifficulty(btn.dataset.difficulty));
-});
+// Event Listeners moved to DOMContentLoaded event
 
 // Utility Functions
 function selectDifficulty(difficulty) {
@@ -489,7 +449,9 @@ function updateUI() {
     // Show boss level warning
     if (gameState.currentLevel === 10) {
         const bossWarning = document.querySelector('.boss-warning') || createBossWarning();
-        bossWarning.style.display = 'block';
+        if (bossWarning) {
+            bossWarning.style.display = 'block';
+        }
     }
 }
 
@@ -513,14 +475,20 @@ function startTimer() {
     const config = getDifficultyAdjustedConfig(gameState.currentLevel);
     gameState.timeRemaining = config.timeLimit;
     
+    if (gameState.timerInterval) {
+        clearInterval(gameState.timerInterval);
+    }
+    
     gameState.timerInterval = setInterval(() => {
         gameState.timeRemaining--;
         
         if (gameState.timeRemaining <= 0) {
             processLevelEnd(false);
         } else if (gameState.timeRemaining <= 10) {
-            elements.timer.style.color = '#ff0000';
-            elements.timer.style.animation = 'pulse 1s ease-in-out infinite';
+            if (elements.timer) {
+                elements.timer.style.color = '#ff0000';
+                elements.timer.style.animation = 'pulse 1s ease-in-out infinite';
+            }
         }
         
         updateUI();
@@ -715,7 +683,7 @@ function resetGame() {
 
 function startLevel() {
     const config = getDifficultyAdjustedConfig(gameState.currentLevel);
-    
+
     gameState.evidenceFound = 0;
     gameState.hintsLeft = config.hints;
     gameState.selectedItems = new Set();
@@ -724,37 +692,22 @@ function startLevel() {
     gameState.correctScams = 0;
     gameState.timerInterval = null;
     gameState.bossLevelFailed = false;
-    
+
     gameState.gameItems = generateLevelItems(gameState.currentLevel);
     gameState.totalScams = gameState.gameItems.filter(item => item.isScam).length;
-    
+
     elements.itemsGrid.innerHTML = '';
     gameState.gameItems.forEach((item, index) => {
         const itemElement = createItemElement(item, index);
         elements.itemsGrid.appendChild(itemElement);
     });
-    
-    gameState.isGameActive = true;
+
     showPage('level');
-    startTimer();
     updateUI();
-    
-    const hintMsgDiv = document.getElementById('hintMessage');
-    if (hintMsgDiv) hintMsgDiv.textContent = '';
-    
-    // Show tutorial for starting level based on difficulty
-    if (gameState.currentLevel === gameState.startingLevel) {
-        // Update starting level display in tutorial
-        const startingLevelDisplay = document.getElementById('startingLevelDisplay');
-        if (startingLevelDisplay) {
-            startingLevelDisplay.textContent = gameState.startingLevel;
-        }
-        
-        const tutorialOverlay = document.getElementById('tutorialOverlay');
-        if (tutorialOverlay) {
-            tutorialOverlay.classList.remove('hidden');
-        }
-    }
+
+    // Start game immediately - no tutorial
+    gameState.isGameActive = true;
+    startTimer();
 }
 
 function startGameFromDifficulty() {
@@ -763,19 +716,55 @@ function startGameFromDifficulty() {
     startLevel();
 }
 
+// Tutorial removed - game starts immediately
+
 // Tutorial close event listener
 document.addEventListener('DOMContentLoaded', () => {
-    const closeTutorialBtn = document.getElementById('closeTutorialBtn');
-    if (closeTutorialBtn) {
-        closeTutorialBtn.addEventListener('click', () => {
-            const tutorialOverlay = document.getElementById('tutorialOverlay');
-            if (tutorialOverlay) {
-                tutorialOverlay.classList.add('hidden');
-            }
-            // Start the game after tutorial is closed
-            startLevel();
-        });
-    }
+    // Initialize DOM elements after DOM is loaded
+    pages = {
+        landing: document.getElementById('landingPage'),
+        backstory: document.getElementById('backstoryPage'),
+        level: document.getElementById('levelPages'),
+        end: document.getElementById('endScreen')
+    };
+
+    elements = {
+        currentLevel: document.getElementById('currentLevel'),
+        levelProgress: document.getElementById('levelProgress'),
+        timer: document.getElementById('timer'),
+        evidenceCount: document.getElementById('evidenceCount'),
+        hintCount: document.getElementById('hintCount'),
+        hintBtn: document.getElementById('hintBtn'),
+        itemsGrid: document.getElementById('itemsGrid'),
+        evidenceBoard: document.getElementById('evidenceBoard'),
+        levelCompletePopup: document.getElementById('levelCompletePopup'),
+        completedLevel: document.getElementById('completedLevel'),
+        levelAccuracy: document.getElementById('levelAccuracy'),
+        levelTimeBonus: document.getElementById('levelTimeBonus'),
+        levelEvidence: document.getElementById('levelEvidence'),
+        finalAccuracy: document.getElementById('finalAccuracy'),
+        totalEvidence: document.getElementById('totalEvidence'),
+        totalMistakes: document.getElementById('totalMistakes'),
+        totalHints: document.getElementById('totalHints'),
+        badgeSection: document.getElementById('badgeSection'),
+        correctSound: document.getElementById('correctSound'),
+        incorrectSound: document.getElementById('incorrectSound'),
+        levelCompleteSound: document.getElementById('levelCompleteSound')
+    };
+
+    // Event Listeners
+    document.getElementById('startGameBtn').addEventListener('click', () => showPage('backstory'));
+    document.getElementById('beginInvestigationBtn').addEventListener('click', startGameFromDifficulty);
+    document.getElementById('hintBtn').addEventListener('click', useHint);
+    document.getElementById('endLevelBtn').addEventListener('click', () => processLevelEnd(false));
+    document.getElementById('nextLevelBtn').addEventListener('click', nextLevel);
+    document.getElementById('playAgainBtn').addEventListener('click', resetGame);
+    document.getElementById('backToMenuBtn').addEventListener('click', () => showPage('landing'));
+
+    // Difficulty selection event listeners
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.addEventListener('click', () => selectDifficulty(btn.dataset.difficulty));
+    });
     
     // Set default difficulty
     selectDifficulty('medium');
