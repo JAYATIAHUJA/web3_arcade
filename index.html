@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Learning Arcade - Learn Blockchain Through Gaming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">Web3 Arcade</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#hero" class="nav-link">Home</a></li>
+                <li><a href="#games" class="nav-link">Games</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="title-line">Web3</span>
+                    <span class="title-line">Learning</span>
+                    <span class="title-line">Arcade</span>
+                </h1>
+                <p class="hero-description">
+                    <span class="highlight">Learn, Play, Earn</span> — Master Web3 the Fun Way! 
+                    Step inside the ultimate gamified learning hub where every game teaches you real Web3 skills.
+                </p>
+                <button class="cta-button" id="startLearning">
+                    <span class="button-text">Start Learning</span>
+                    <div class="button-glow"></div>
+                </button>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Grid Section -->
+    <section id="games" class="games-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🕹 Our Games</h2>
+                <p class="section-subtitle">Each game is designed to be interactive, theme-based, and challenge-driven, so you're learning without even realizing it.</p>
+            </div>
+            <div class="games-grid">
+                <!-- Museum Treasure Hunt -->
+                <div class="parent" data-game="museum-treasure-hunt">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🏛️ Museum Treasure Hunt</span>
+                            <p class="card-content">Explore a virtual museum and assemble your first blockchain by ordering blocks.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">NFT</span>
+                            <span class="date">Badge</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bakery Checkout -->
+                <div class="parent" data-game="bakery-checkout">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🏪 Bakery Checkout</span>
+                            <p class="card-content">Create secure wallets to serve pastry tokens to customers.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Wallet</span>
+                            <span class="date">Maker</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pizza Delivery -->
+                <div class="parent" data-game="pizza-delivery">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🚚 Pizza Delivery</span>
+                            <p class="card-content">Deliver pizzas, pay the right gas fees, and avoid scams.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Gas</span>
+                            <span class="date">Guru</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Art Gallery -->
+                <div class="parent" data-game="art-gallery">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🎨 Art Gallery</span>
+                            <p class="card-content">Mint unique NFTs and curate your personal gallery.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Mint</span>
+                            <span class="date">Master</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medieval Trading Village -->
+                <div class="parent" data-game="medieval-trading">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">⚖️ Medieval Trading Village</span>
+                            <p class="card-content">Negotiate trades using automated smart contracts.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Contract</span>
+                            <span class="date">Coder</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detective Case -->
+                <div class="parent" data-game="detective-case">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🕵️ Detective Case</span>
+                            <p class="card-content">Hunt down fake wallets and phishing links hidden in clues.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Fraud</span>
+                            <span class="date">Fighter</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Factory Assembly Line -->
+                <div class="parent" data-game="factory-assembly">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">⚙️ Factory Assembly Line</span>
+                            <p class="card-content">Get all nodes to approve your blocks by reaching consensus.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Consensus</span>
+                            <span class="date">Captain</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Island Resource Hunt -->
+                <div class="parent" data-game="island-resource">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🏝️ Island Resource Hunt</span>
+                            <p class="card-content">Manage scarce resources and trade to optimize your economy.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Token</span>
+                            <span class="date">Tycoon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Space Cargo Transport -->
+                <div class="parent" data-game="space-cargo">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🚀 Space Cargo Transport</span>
+                            <p class="card-content">Deliver cargo faster using Layer 2 hyperlanes.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Speedy</span>
+                            <span class="date">Layerer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crypto City Builder -->
+                <div class="parent" data-game="crypto-city">
+                    <div class="card">
+                        <div class="content-box">
+                            <span class="card-title">🏆 Crypto City Builder</span>
+                            <p class="card-content">Build a city with a blockchain-powered economy.</p>
+                            <span class="see-more">Play Now</span>
+                        </div>
+                        <div class="date-box">
+                            <span class="month">Web3</span>
+                            <span class="date">Hero</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <h2 class="about-title">💡 How We Help</h2>
+                <p class="about-description">
+                    We make Web3 education hands-on, gamified, and reward-driven. Instead of reading endless docs 
+                    or sitting through boring lectures, you'll play interactive games that simulate real-world 
+                    blockchain scenarios — and leave with actual skills, NFT badges, and bragging rights.
+                </p>
+                
+                <div class="taglines-section">
+                    <h3 class="taglines-title">🔥 Our Mission</h3>
+                    <div class="taglines-grid">
+                        <div class="tagline-item">
+                            <span class="tagline-text">"Turn Play into Pay — Learn Web3 the Fun Way!"</span>
+                        </div>
+                        <div class="tagline-item">
+                            <span class="tagline-text">"Master Blockchain, One Game at a Time."</span>
+                        </div>
+                        <div class="tagline-item">
+                            <span class="tagline-text">"From Gamer to Web3 Pro — Your Journey Starts Here."</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label">Interactive Games</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">Active Learners</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Learning Modules</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">Web3 Arcade</span>
+                </div>
+                <p class="footer-text">© 2024 Web3 Learning Arcade. Building the future of education.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

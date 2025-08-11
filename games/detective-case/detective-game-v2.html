@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detective Case: Scam & Security Awareness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detective-game-v2.css">
+</head>
+<body>
+    <!-- Game Container -->
+    <div id="gameContainer" class="game-container">
+        
+        <!-- Landing Page -->
+        <div id="landingPage" class="page active">
+            <div class="landing-content">
+                <div class="game-title">
+                    <h1>Detective Case</h1>
+                    <h2>Scam & Security Awareness</h2>
+                </div>
+                
+                <div class="game-subtitle">
+                    <p>Master the art of detecting Web3 scams through 10 challenging levels</p>
+                </div>
+                
+                <button id="startGameBtn" class="start-btn">
+                    <span>🚀 Start Game</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Backstory Page -->
+        <div id="backstoryPage" class="page">
+            <div class="backstory-content">
+                <div class="story-header">
+                    <h2>Case File #2025</h2>
+                    <h3>The Great Web3 Scam Epidemic</h3>
+                </div>
+                
+                <div class="story-content">
+                    <p>Detective, you've been called to investigate a surge in Web3 scams targeting unsuspecting users. 
+                    Your mission is to identify and catalog all fraudulent items across 10 increasingly difficult levels.</p>
+                    
+                    <p>Each level presents a mix of legitimate and scam items. Your job is to:</n>
+                    
+                    <ul>
+                        <li>🔍 Identify fake wallet addresses</li>
+                        <li>🌐 Spot phishing websites</li>
+                        <li>📱 Detect malicious QR codes</li>
+                        <li>📋 Document evidence on your corkboard</li>
+                        <li>⏰ Beat the timer before it runs out</li>
+                    </ul>
+                    
+                    <p>Use your detective skills wisely. You'll have hints available for the first 9 levels, 
+                    but the final boss challenge will test your true expertise.</p>
+                    
+                    <div class="warning">
+                        <strong>⚠️ Warning:</strong> The boss level has no hints and requires perfect accuracy!
+                    </div>
+                </div>
+                
+                <button id="beginInvestigationBtn" class="begin-btn">
+                    <span>🔍 Begin Investigation</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Level Pages -->
+        <div id="levelPages" class="page">
+            <div class="level-header">
+                <div class="level-info">
+                    <div class="level-number">Level <span id="currentLevel">1</span></div>
+                    <div class="level-progress">Progress: <span id="levelProgress">0/10</span></div>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="timer-section">
+                        <div class="timer-label">⏰ Time</div>
+                        <div id="timer" class="timer">60</div>
+                    </div>
+                    
+                    <div class="score-section">
+                        <div class="score-label">🎯 Evidence</div>
+                        <div id="evidenceCount" class="evidence-count">0</div>
+                    </div>
+                    
+                    <div class="hint-section">
+                        <div class="hint-label">💡 Hints</div>
+                        <div id="hintCount" class="hint-count">3</div>
+                        <button id="hintBtn" class="hint-btn" disabled>Get Hint</button>
+                        <div id="hintMessage" class="hint-message"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="level-content">
+                <div class="items-grid" id="itemsGrid">
+                    <!-- Items will be dynamically generated here -->
+                </div>
+                
+                <div class="evidence-board">
+                    <h3>📋 Evidence Board</h3>
+                    <div id="evidenceBoard" class="evidence-items">
+                        <!-- Evidence items will be added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="level-footer">
+                <button id="endLevelBtn" class="end-level-btn">End Level</button>
+            </div>
+        </div>
+        
+        <!-- Level Complete Popup -->
+        <div id="levelCompletePopup" class="popup hidden">
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h2>🎉 Case Solved!</h2>
+                    <div class="level-badge">Level <span id="completedLevel">1</span> Complete</div>
+                </div>
+                
+                <div class="popup-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Accuracy</div>
+                        <div id="levelAccuracy" class="stat-value">100%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Time Bonus</div>
+                        <div id="levelTimeBonus" class="stat-value">+50</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Evidence Found</div>
+                        <div id="levelEvidence" class="stat-value">5</div>
+                    </div>
+                </div>
+                
+                <div class="popup-actions">
+                    <button id="nextLevelBtn" class="next-level-btn">Next Level</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- End Screen -->
+        <div id="endScreen" class="page">
+            <div class="end-content">
+                <div class="results-header">
+                    <h2>🔍 Investigation Complete</h2>
+                    <h3>Final Report</h3>
+                </div>
+                
+                <div class="final-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Overall Accuracy</div>
+                        <div id="finalAccuracy" class="stat-value">0%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Total Evidence</div>
+                        <div id="totalEvidence" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Total Mistakes</div>
+                        <div id="totalMistakes" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Hints Used</div>
+                        <div id="totalHints" class="stat-value">0</div>
+                    </div>
+                </div>
+                
+                <div id="badgeSection" class="badge-section hidden">
+                    <div class="badge-container">
+                        <div class="badge-icon">🏆</div>
+                        <h3>Fraud Fighter NFT Badge</h3>
+                        <p>Outstanding detective work! You've earned the prestigious Fraud Fighter badge.</p>
+                    </div>
+                </div>
+                
+                <div class="end-actions">
+                    <button id="playAgainBtn" class="play-again-btn">🔄 Play Again</button>
+                    <button id="backToMenuBtn" class="back-menu-btn">🏠 Back to Menu</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Audio Elements -->
+    <audio id="correctSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    <audio id="incorrectSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    <audio id="levelCompleteSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    
+    <script src="detective-game-v2.js"></script>
+</body>
+</html>
