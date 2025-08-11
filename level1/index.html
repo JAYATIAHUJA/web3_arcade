@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blockchain Museum - Interactive Learning Maze</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="game-container">
+      <header class="game-header">
+        <h1>🏛️ Blockchain Museum</h1>
+        <div class="game-info">
+          <div class="progress">
+            <span>Exhibits Visited: <span id="progress">0/5</span></span>
+          </div>
+          <div class="next-block">
+            <span>Next Exhibit: <span id="next-block">Exhibit A</span></span>
+          </div>
+        </div>
+      </header>
+
+      <main class="game-main">
+        <div class="museum-info">
+          <p class="museum-subtitle">🎓 Interactive Blockchain Learning Experience</p>
+          <p class="museum-description">Navigate through our digital museum and discover the fundamentals of blockchain technology in the correct sequence</p>
+        </div>
+        
+        <div class="maze-container">
+          <div id="maze" class="maze"></div>
+        </div>
+        
+        <div class="game-controls">
+          <div class="mobile-controls">
+            <div class="control-row">
+              <button class="control-btn" data-direction="up">↑</button>
+            </div>
+            <div class="control-row">
+              <button class="control-btn" data-direction="left">←</button>
+              <button class="control-btn" data-direction="down">↓</button>
+              <button class="control-btn" data-direction="right">→</button>
+            </div>
+          </div>
+          
+          <div class="desktop-hint">
+            <p>Use WASD or Arrow Keys to move</p>
+          </div>
+        </div>
+      </main>
+
+      <div class="game-overlay" id="game-overlay">
+        <div class="overlay-content">
+          <h2 id="overlay-title">Learning Path Interrupted</h2>
+          <p id="overlay-message">You visited the wrong exhibit! Please follow the learning sequence.</p>
+          <button id="restart-btn" class="restart-btn">Restart Museum Tour</button>
+        </div>
+      </div>
+
+      <div class="block-info" id="block-info">
+        <div class="block-content">
+          <h3>🏛️ Exhibit Discovered!</h3>
+          <div class="exhibit-info" id="block-step"></div>
+          <button class="continue-btn" id="continue-btn">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
