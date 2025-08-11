@@ -1,0 +1,482 @@
+/* Enhanced Styles for Detective Case Game */
+
+/* Sound Effect Indicators */
+.sound-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    z-index: 3000;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.3s ease;
+}
+
+.sound-indicator.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.sound-indicator.correct {
+    background: var(--success-green);
+    color: var(--text-dark);
+}
+
+.sound-indicator.incorrect {
+    background: var(--error-red);
+}
+
+.sound-indicator.level-complete {
+    background: var(--accent-yellow);
+    color: var(--text-dark);
+}
+
+/* Enhanced Hint Messages */
+.hint-message {
+    margin-top: 0.7rem;
+    font-size: 1rem;
+    color: var(--accent-yellow);
+    background: rgba(255, 215, 0, 0.08);
+    border-left: 4px solid var(--accent-yellow);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    min-height: 1.5em;
+    font-family: 'Special Elite', cursive;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.08);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.hint-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.hint-message.hint-active {
+    opacity: 1;
+    transform: translateY(0);
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.hint-message.hint-active::before {
+    left: 100%;
+}
+
+/* Enhanced Evidence Board Items */
+.evidence-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.evidence-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+}
+
+.evidence-item:hover::after {
+    transform: translateX(100%);
+}
+
+/* Enhanced Item Animations */
+.item {
+    position: relative;
+    overflow: hidden;
+}
+
+.item::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+.item:hover::after {
+    width: 100px;
+    height: 100px;
+}
+
+/* Enhanced Timer Bar */
+.timer-bar-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.timer-bar-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: timerGlow 2s ease-in-out infinite;
+}
+
+@keyframes timerGlow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+}
+
+/* Enhanced Popup Animations */
+.popup-content {
+    position: relative;
+    overflow: hidden;
+}
+
+.popup-content::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    animation: popupRotate 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes popupRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced Difficulty Badge */
+.difficulty-badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.difficulty-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.difficulty-badge:hover::before {
+    left: 100%;
+}
+
+/* Enhanced Boss Warning */
+.boss-warning {
+    position: relative;
+    overflow: hidden;
+}
+
+.boss-warning::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+    animation: bossWarningShine 3s ease-in-out infinite;
+}
+
+@keyframes bossWarningShine {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+}
+
+/* Enhanced Tutorial */
+.tutorial-overlay {
+    position: relative;
+    z-index: 3000;
+}
+
+.tutorial-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.9) 100%);
+    animation: tutorialPulse 2s ease-in-out infinite;
+}
+
+@keyframes tutorialPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+.tutorial-content {
+    background: linear-gradient(135deg, var(--card-bg), rgba(255, 215, 0, 0.1));
+    border: 3px solid var(--accent-yellow);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    animation: tutorialAlert 0.5s ease-out;
+}
+
+@keyframes tutorialAlert {
+    0% {
+        transform: scale(0.5) rotate(-5deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(2deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.tutorial-content h3 {
+    color: var(--accent-yellow);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px var(--accent-yellow);
+}
+
+.tutorial-content p {
+    margin-bottom: 1rem;
+    color: var(--text-light);
+}
+
+.tutorial-content ul {
+    list-style: none;
+    margin: 1rem 0;
+    padding-left: 0;
+}
+
+.tutorial-content li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    color: var(--text-gray);
+}
+
+.tutorial-content li:last-child {
+    border-bottom: none;
+}
+
+#startingLevelDisplay {
+    color: var(--accent-yellow);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Enhanced Landing Page */
+.landing-content {
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.05), transparent);
+    animation: landingShine 4s ease-in-out infinite;
+}
+
+@keyframes landingShine {
+    0%, 100% { transform: translateX(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Enhanced Game Stats */
+.game-stats > div {
+    position: relative;
+    overflow: hidden;
+}
+
+.game-stats > div::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-yellow);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.game-stats > div:hover::after {
+    transform: scaleX(1);
+}
+
+/* Enhanced Buttons */
+.begin-btn, .skip-btn, .next-level-btn, .play-again-btn, .back-menu-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.begin-btn::before, .skip-btn::before, .next-level-btn::before, .play-again-btn::before, .back-menu-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.begin-btn:hover::before, .skip-btn:hover::before, .next-level-btn:hover::before, .play-again-btn:hover::before, .back-menu-btn:hover::before {
+    left: 100%;
+}
+
+/* Enhanced Items Grid */
+.items-grid {
+    position: relative;
+}
+
+.items-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(45deg, transparent 49%, rgba(255, 215, 0, 0.05) 50%, transparent 51%),
+        linear-gradient(-45deg, transparent 49%, rgba(255, 215, 0, 0.05) 50%, transparent 51%);
+    background-size: 20px 20px;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+/* Enhanced Level Header */
+.level-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.level-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-yellow), var(--accent-orange), var(--accent-yellow));
+    animation: headerBorder 3s ease-in-out infinite;
+}
+
+@keyframes headerBorder {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+}
+
+/* Enhanced End Screen */
+.end-content {
+    position: relative;
+    overflow: hidden;
+}
+
+.end-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255, 140, 0, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Enhanced Badge Section */
+.badge-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.badge-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: conic-gradient(from 0deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    animation: badgeRotate 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes badgeRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Review Items */
+.review-item {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    transition: all 0.3s ease;
+}
+
+.review-item:hover {
+    color: var(--accent-yellow);
+    padding-left: 0.5rem;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 768px) {
+    .sound-indicator {
+        top: 10px;
+        right: 10px;
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .boss-warning {
+        font-size: 0.8rem;
+        padding: 0.6rem 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sound-indicator {
+        top: 5px;
+        right: 5px;
+        font-size: 0.6rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .hint-message {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+}

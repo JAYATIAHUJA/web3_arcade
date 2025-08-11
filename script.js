@@ -59,12 +59,13 @@ function initializeButtonHandlers() {
         startLearningBtn.addEventListener('click', function() {
             // Add loading state
             this.classList.add('loading');
-            this.querySelector('.button-text').textContent = 'Loading...';
+            const originalText = this.textContent;
+            this.textContent = 'Loading...';
             
             // Simulate loading delay
             setTimeout(() => {
                 this.classList.remove('loading');
-                this.querySelector('.button-text').textContent = 'Start Learning';
+                this.textContent = originalText;
                 
                 // Scroll to games section
                 const gamesSection = document.querySelector('#games');
