@@ -1,0 +1,28 @@
+import { PastryType, PastryInfo } from '../types';
+
+export const pastryTypes: Record<PastryType, PastryInfo> = {
+  croissant: { emoji: '🥐', name: 'Croissant', price: 3, color: 'bg-yellow-100' },
+  donut: { emoji: '🍩', name: 'Donut', price: 2, color: 'bg-pink-100' },
+  cookie: { emoji: '🍪', name: 'Cookie', price: 2, color: 'bg-amber-100' },
+  cake: { emoji: '🍰', name: 'Cake Slice', price: 4, color: 'bg-red-100' },
+  bagel: { emoji: '🥯', name: 'Bagel', price: 3, color: 'bg-orange-100' },
+  muffin: { emoji: '🧁', name: 'Muffin', price: 3, color: 'bg-purple-100' }
+};
+
+export function generateOrder(level: number): PastryType[] {
+  const availableTypes = Object.keys(pastryTypes) as PastryType[];
+  const orderSize = Math.min(2 + Math.floor(level / 3), 5); // Increase complexity with level
+  const order: PastryType[] = [];
+  
+  // Generate random order
+  for (let i = 0; i < Math.max(1, Math.floor(Math.random() * orderSize) + 1); i++) {
+    const randomType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
+    order.push(randomType);
+  }
+  
+  return order;
+}
+
+export function calculateOrderTotal(order: PastryType[]): number {
+  return order.reduce((total, pastry) => total + pastryTypes[pastry].price, 0);
+}
