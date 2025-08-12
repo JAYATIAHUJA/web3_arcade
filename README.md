@@ -43,37 +43,19 @@ Built with pure HTML, CSS, and JavaScript - no external libraries required.
    - Serve pastry tokens to customers by creating secure wallets
    - **Reward**: NFT Badge — Wallet Maker
 
-3. **🚚 Pizza Delivery** - Transactions & Gas Fees
-   - Deliver pizzas to correct wallet addresses, pay gas fees, avoid scams
-   - **Reward**: NFT Badge — Gas Guru
 
-4. **🎨 Art Gallery** - NFT Minting
-   - Mint paintings with unique IDs and showcase them in your gallery
-   - **Reward**: NFT Badge — Mint Master
-
-5. **⚖️ Medieval Trading Village** - Smart Contracts
+3. **⚖️ Medieval Trading Village** - Smart Contracts
    - Negotiate trades using automated agreements written as smart contracts
    - **Reward**: NFT Badge — Contract Coder
 
-6. **🕵️ Detective Case** - Scam & Security Awareness
+4. **🕵️ Detective Case** - Scam & Security Awareness
    - Hunt down fake wallets and phishing links hidden in clues
    - **Reward**: NFT Badge — Fraud Fighter
 
-7. **⚙️ Factory Assembly Line** - Consensus Mechanisms
-   - Get all "nodes" to approve your products by reaching majority consensus
-   - **Reward**: NFT Badge — Consensus Captain
-
-8. **🏝️ Island Resource Hunt** - Tokenomics & Supply
+5. **🏝️ Island Resource Hunt** - Tokenomics & Supply
    - Manage scarce resources and trade to maximize your token economy
    - **Reward**: NFT Badge — Token Tycoon
 
-9. **🚀 Space Cargo Transport** - Layer 2 & Scaling
-   - Deliver cargo faster using Layer 2 hyperlanes for optimized transactions
-   - **Reward**: NFT Badge — Speedy Layerer
-
-10. **🏆 Crypto City Builder** - Full Web3 Simulation
-    - Build your own city with a blockchain-powered economy and trade system
-    - **Reward**: Certificate — Web3 Hero
 
 ## 🛠️ Technical Implementation
 
