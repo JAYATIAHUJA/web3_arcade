@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 48 100% 98%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --card: 48 100% 98%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --popover: 48 100% 98%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 174 72% 35%; /* tropical teal */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 33 100% 88%; /* mango sand */
+    --secondary-foreground: 24 74% 20%;
+
+    --muted: 48 100% 94%;
+    --muted-foreground: 215.4 16.3% 35%;
+
+    --accent: 194 95% 74%; /* sky */
+    --accent-foreground: 222.2 47.4% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 200 24% 88%;
+    --input: 200 24% 88%;
+    --ring: 174 72% 35%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar tokens */
+    --sidebar-background: 48 100% 98%;
+    --sidebar-foreground: 222.2 47.4% 11.2%;
+    --sidebar-primary: 174 72% 35%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 33 100% 92%;
+    --sidebar-accent-foreground: 24 74% 20%;
+    --sidebar-border: 200 24% 88%;
+    --sidebar-ring: 174 72% 42%;
+
+    /* Extra tokens for gradients/shadows */
+    --primary-glow: 174 72% 65%;
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.25);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+  }
+
+  .dark {
+    --background: 204 80% 6%;
+    --foreground: 210 40% 96%;
+
+    --card: 204 80% 6%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 204 80% 6%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 174 72% 45%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 33 45% 24%;
+    --secondary-foreground: 48 100% 90%;
+
+    --muted: 210 32% 12%;
+    --muted-foreground: 215 20% 72%;
+
+    --accent: 195 70% 28%;
+    --accent-foreground: 210 40% 96%;
+
+    --destructive: 0 72% 40%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 200 24% 22%;
+    --input: 200 24% 22%;
+    --ring: 174 72% 45%;
+
+    --sidebar-background: 204 80% 6%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 174 72% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 200 32% 12%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 200 24% 22%;
+    --sidebar-ring: 174 72% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .story-link {
+    @apply relative inline-block;
+  }
+  .story-link::after {
+    content: "";
+    @apply absolute w-full scale-x-0 h-0.5 bottom-0 left-0 bg-primary origin-bottom-right transition-transform duration-300;
+  }
+  .story-link:hover::after {
+    @apply scale-x-100 origin-bottom-left;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  .pulse {
+    animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+  }
+
+  .island-bg {
+    background:
+      radial-gradient(1200px 600px at -10% -10%, hsl(var(--accent) / 0.12), transparent 50%),
+      radial-gradient(800px 400px at 110% 110%, hsl(var(--primary) / 0.10), transparent 55%),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background)) 70%, hsl(var(--accent) / 0.06));
+  }
+}
