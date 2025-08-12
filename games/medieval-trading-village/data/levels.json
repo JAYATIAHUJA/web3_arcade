@@ -1,0 +1,29 @@
+[
+  {
+    "level": 1,
+    "title": "Farmer Edric’s Wheat Trade",
+    "story": "Farmer Edric needs gold for tools. Trade 2 gold for 3 sacks of wheat.",
+    "concept": "Basic Blockchain Transactions",
+    "goal": "Trade gold for wheat.",
+    "mechanics": [
+      "Check wallet balance",
+      "Sign & execute trade contract",
+      "Update ledger"
+    ],
+    "winCondition": "Have 3 wheat in inventory.",
+    "reward": "NFT Badge: Block Collector"
+  },
+  {
+    "level": 2,
+    "title": "Blacksmith Hilda’s Sword",
+    "story": "Hilda needs iron to forge swords. Pay gas fees!",
+    "concept": "Gas Fees in Transactions",
+    "goal": "Trade 5 iron + gas fee for 1 sword.",
+    "mechanics": [
+      "Deduct gas fee from gold",
+      "Update ledger"
+    ],
+    "winCondition": "Sword in inventory.",
+    "reward": "NFT Badge: Wallet Maker"
+  }
+]

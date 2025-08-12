@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeButtonHandlers();
     initializeParticleEffects();
     initializeFloatingShapes();
+    initializeAuthentication();
+    initializeDashboard();
 });
 
 // Smooth Scrolling for Navigation Links
@@ -398,3 +400,471 @@ console.log(`
 💡 Try clicking on the floating shapes and particles!
 ⌨️  Use arrow keys to navigate between sections
 `);
+
+// Authentication System
+function initializeAuthentication() {
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const loginBtn = document.getElementById('loginBtn');
+    const registerBtn = document.getElementById('registerBtn');
+    const loginClose = document.getElementById('loginClose');
+    const registerClose = document.getElementById('registerClose');
+    const showRegister = document.getElementById('showRegister');
+    const showLogin = document.getElementById('showLogin');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
+    // Show modals
+    loginBtn.addEventListener('click', () => {
+        loginModal.style.display = 'block';
+    });
+
+    registerBtn.addEventListener('click', () => {
+        registerModal.style.display = 'block';
+    });
+
+    // Close modals
+    loginClose.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+    });
+
+    registerClose.addEventListener('click', () => {
+        registerModal.style.display = 'none';
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+        if (e.target === registerModal) {
+            registerModal.style.display = 'none';
+        }
+    });
+
+    // Switch between modals
+    showRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginModal.style.display = 'none';
+        registerModal.style.display = 'block';
+    });
+
+    showLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerModal.style.display = 'none';
+        loginModal.style.display = 'block';
+    });
+
+    // Handle form submissions
+    loginForm.addEventListener('submit', handleLogin);
+    registerForm.addEventListener('submit', handleRegister);
+
+    // Check if user is already logged in
+    checkAuthStatus();
+}
+
+// Handle login
+function handleLogin(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    if (!username || !password) {
+        showError('Please fill in all fields');
+        return;
+    }
+
+    // Get users from localStorage
+    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        // Store current user session
+        localStorage.setItem('web3arcade_current_user', JSON.stringify(user));
+        
+        // Update UI
+        updateAuthUI(true);
+        
+        // Close modal
+        document.getElementById('loginModal').style.display = 'none';
+        
+        // Clear form
+        document.getElementById('loginForm').reset();
+        
+        // Show success message
+        showSuccess(`Welcome back, ${username}!`);
+        
+        // Load dashboard
+        loadDashboard();
+    } else {
+        showError('Invalid username or password');
+    }
+}
+
+// Handle registration
+function handleRegister(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('registerUsername').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (!username || !email || !password || !confirmPassword) {
+        showError('Please fill in all fields');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showError('Passwords do not match');
+        return;
+    }
+
+    if (password.length < 6) {
+        showError('Password must be at least 6 characters');
+        return;
+    }
+
+    // Check if user already exists
+    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
+    if (users.find(u => u.username === username)) {
+        showError('Username already exists');
+        return;
+    }
+
+    if (users.find(u => u.email === email)) {
+        showError('Email already exists');
+        return;
+    }
+
+    // Create new user
+    const newUser = {
+        id: Date.now(),
+        username,
+        email,
+        password,
+        createdAt: new Date().toISOString(),
+        gamesPlayed: [],
+        totalScore: 0,
+        achievements: []
+    };
+
+    // Save user
+    users.push(newUser);
+    localStorage.setItem('web3arcade_users', JSON.stringify(users));
+    localStorage.setItem('web3arcade_current_user', JSON.stringify(newUser));
+
+    // Update UI
+    updateAuthUI(true);
+    
+    // Close modal
+    document.getElementById('registerModal').style.display = 'none';
+    
+    // Clear form
+    document.getElementById('registerForm').reset();
+    
+    // Show success message
+    showSuccess('Account created successfully! Welcome to Web3 Arcade!');
+    
+    // Load dashboard
+    loadDashboard();
+}
+
+// Dashboard System
+function initializeDashboard() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+}
+
+// Update authentication UI
+function updateAuthUI(isLoggedIn) {
+    const authButtons = document.querySelector('.auth-buttons');
+    const heroSection = document.getElementById('hero');
+    const playerDashboard = document.getElementById('playerDashboard');
+    const gamesSection = document.getElementById('games');
+
+    if (isLoggedIn) {
+        // Hide auth buttons
+        authButtons.style.display = 'none';
+        
+        // Hide hero and games sections
+        if (heroSection) heroSection.style.display = 'none';
+        if (gamesSection) gamesSection.style.display = 'none';
+        
+        // Show dashboard
+        if (playerDashboard) playerDashboard.style.display = 'block';
+    } else {
+        // Show auth buttons
+        authButtons.style.display = 'flex';
+        
+        // Show hero and games sections
+        if (heroSection) heroSection.style.display = 'block';
+        if (gamesSection) gamesSection.style.display = 'block';
+        
+        // Hide dashboard
+        if (playerDashboard) playerDashboard.style.display = 'none';
+    }
+}
+
+// Check authentication status
+function checkAuthStatus() {
+    const currentUser = localStorage.getItem('web3arcade_current_user');
+    if (currentUser) {
+        updateAuthUI(true);
+        loadDashboard();
+    } else {
+        updateAuthUI(false);
+    }
+}
+
+// Handle logout
+function handleLogout() {
+    localStorage.removeItem('web3arcade_current_user');
+    updateAuthUI(false);
+    showSuccess('Logged out successfully');
+}
+
+// Load dashboard
+function loadDashboard() {
+    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
+    if (!currentUser) return;
+
+    // Update username
+    const usernameElement = document.getElementById('dashboardUsername');
+    if (usernameElement) {
+        usernameElement.textContent = currentUser.username;
+    }
+
+    // Update stats
+    updateDashboardStats(currentUser);
+    
+    // Load games grid
+    loadDashboardGames();
+}
+
+// Update dashboard stats
+function updateDashboardStats(user) {
+    const totalGamesElement = document.getElementById('totalGames');
+    const totalScoreElement = document.getElementById('totalScore');
+    const achievementsElement = document.getElementById('achievements');
+
+    if (totalGamesElement) totalGamesElement.textContent = user.gamesPlayed.length;
+    if (totalScoreElement) totalScoreElement.textContent = user.totalScore;
+    if (achievementsElement) achievementsElement.textContent = user.achievements.length;
+}
+
+// Load dashboard games
+function loadDashboardGames() {
+    const dashboardGamesGrid = document.getElementById('dashboardGamesGrid');
+    if (!dashboardGamesGrid) return;
+
+    // Get the original games grid content
+    const originalGamesGrid = document.querySelector('.games-grid');
+    if (!originalGamesGrid) return;
+
+    // Clone the games grid
+    const clonedGrid = originalGamesGrid.cloneNode(true);
+    clonedGrid.id = 'dashboardGamesGrid';
+    clonedGrid.className = 'games-grid dashboard-games-grid';
+
+    // Update each game card with progress and play button
+    const gameCards = clonedGrid.querySelectorAll('.parent');
+    gameCards.forEach(card => {
+        const gameName = card.dataset.game;
+        const progress = getGameProgress(gameName);
+        
+        // Add progress badge
+        const progressBadge = document.createElement('div');
+        progressBadge.className = 'progress-badge';
+        progressBadge.textContent = progress > 0 ? `${progress}%` : 'New';
+        card.querySelector('.card').appendChild(progressBadge);
+        
+        // Replace see-more link with play button
+        const seeMoreLink = card.querySelector('.see-more');
+        if (seeMoreLink) {
+            const playButton = document.createElement('button');
+            playButton.className = 'play-now-btn';
+            playButton.textContent = 'Play Now';
+            playButton.addEventListener('click', () => playGame(gameName));
+            seeMoreLink.parentNode.replaceChild(playButton, seeMoreLink);
+        }
+    });
+
+    // Replace the dashboard games grid
+    dashboardGamesGrid.innerHTML = '';
+    dashboardGamesGrid.appendChild(clonedGrid);
+}
+
+// Get game progress from localStorage
+function getGameProgress(gameName) {
+    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
+    if (!currentUser) return 0;
+
+    const gameRecord = currentUser.gamesPlayed.find(g => g.name === gameName);
+    return gameRecord ? gameRecord.progress || 0 : 0;
+}
+
+// Play game function
+function playGame(gameName) {
+    // Record game start
+    recordGameStart(gameName);
+    
+    // Navigate to game based on name
+    switch (gameName) {
+        case 'museum-treasure-hunt':
+            window.location.href = 'level1/index.html';
+            break;
+        case 'detective-case':
+            window.location.href = 'games/detective-case/detective-game-v2.html';
+            break;
+        case 'island-resource':
+            window.location.href = 'island-token-traders/index.html';
+            break;
+        default:
+            // For demo purposes, simulate game completion
+            simulateGameCompletion(gameName);
+            break;
+    }
+}
+
+// Record game start
+function recordGameStart(gameName) {
+    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
+    if (!currentUser) return;
+
+    // Check if game already exists in user's history
+    let gameRecord = currentUser.gamesPlayed.find(g => g.name === gameName);
+    
+    if (!gameRecord) {
+        gameRecord = {
+            name: gameName,
+            startedAt: new Date().toISOString(),
+            progress: 0,
+            score: 0
+        };
+        currentUser.gamesPlayed.push(gameRecord);
+    }
+
+    // Update localStorage
+    localStorage.setItem('web3arcade_current_user', JSON.stringify(currentUser));
+    
+    // Update users array
+    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
+    const userIndex = users.findIndex(u => u.id === currentUser.id);
+    if (userIndex !== -1) {
+        users[userIndex] = currentUser;
+        localStorage.setItem('web3arcade_users', JSON.stringify(users));
+    }
+}
+
+// Simulate game completion for demo
+function simulateGameCompletion(gameName) {
+    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
+    if (!currentUser) return;
+
+    // Find or create game record
+    let gameRecord = currentUser.gamesPlayed.find(g => g.name === gameName);
+    if (!gameRecord) {
+        gameRecord = {
+            name: gameName,
+            startedAt: new Date().toISOString(),
+            progress: 0,
+            score: 0
+        };
+        currentUser.gamesPlayed.push(gameRecord);
+    }
+
+    // Simulate completion
+    gameRecord.progress = 100;
+    gameRecord.score = Math.floor(Math.random() * 50) + 50; // Random score 50-100
+    gameRecord.completedAt = new Date().toISOString();
+
+    // Update total score
+    currentUser.totalScore += gameRecord.score;
+
+    // Update localStorage
+    localStorage.setItem('web3arcade_current_user', JSON.stringify(currentUser));
+    
+    // Update users array
+    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
+    const userIndex = users.findIndex(u => u.id === currentUser.id);
+    if (userIndex !== -1) {
+        users[userIndex] = currentUser;
+        localStorage.setItem('web3arcade_users', JSON.stringify(users));
+    }
+
+    // Update dashboard
+    updateDashboardStats(currentUser);
+    loadDashboardGames();
+    
+    showSuccess(`🎮 ${gameName} completed! +${gameRecord.score} points earned!`);
+}
+
+// Notification system
+function showSuccess(message) {
+    showNotification(message, 'success');
+}
+
+function showError(message) {
+    showNotification(message, 'error');
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        z-index: 3000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 300px;
+        word-wrap: break-word;
+        font-family: 'Montserrat', sans-serif;
+    `;
+
+    // Set background color based on type
+    switch (type) {
+        case 'success':
+            notification.style.background = 'linear-gradient(135deg, #00ff88, #00d4ff)';
+            notification.style.color = '#0b1220';
+            break;
+        case 'error':
+            notification.style.background = 'linear-gradient(135deg, #ff4757, #ff3742)';
+            break;
+        default:
+            notification.style.background = 'linear-gradient(135deg, #00d4ff, #08e0d0)';
+            notification.style.color = '#0b1220';
+    }
+
+    // Add to page
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 300);
+    }, 5000);
+}

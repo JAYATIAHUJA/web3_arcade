@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Learning Arcade - Learn, Play, Earn</title>
+    <title>Blockadia - Where Learning Meets the Blockchain Adventure</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,15 +39,61 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <span class="logo-text">Web3 Arcade</span>
+                <span class="logo-text">Blockadia</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="#hero" class="nav-link">Home</a></li>
                 <li><a href="#games" class="nav-link">Games</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
+                <li class="auth-buttons">
+                    <button class="auth-btn login-btn" id="loginBtn">Login</button>
+                    <button class="auth-btn register-btn" id="registerBtn">Register</button>
+                </li>
             </ul>
         </div>
     </nav>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="loginClose">&times;</span>
+            <h2>Login to Arcade</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="loginUsername" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+            <p class="form-switch">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="registerClose">&times;</span>
+            <h2>Join the Arcade</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="registerUsername" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerPassword" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+            <p class="form-switch">Already have an account? <a href="#" id="showLogin">Login here</a></p>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section id="hero" class="hero">
@@ -73,6 +119,50 @@
                     <dotlottie-wc src="https://lottie.host/81415106-9081-45af-a685-4726cfa791e4/kiTgCc4OwY.lottie" style="width: 400px;height: 400px" speed="1" autoplay loop></dotlottie-wc>
                 </div>
                 
+            </div>
+        </div>
+    </section>
+
+    <!-- Player Dashboard Section (Hidden by default) -->
+    <section id="playerDashboard" class="player-dashboard" style="display: none;">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Welcome, <span id="dashboardUsername">Player</span>! 🎮</h1>
+                <p class="dashboard-subtitle">Ready to continue your Web3 learning journey?</p>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalGames">0</div>
+                        <div class="stat-label">Games Played</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalScore">0</div>
+                        <div class="stat-label">Total Score</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="achievements">0</div>
+                        <div class="stat-label">Achievements</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-header">
+                <h2 class="section-title">🕹 Your Games</h2>
+                <p class="section-subtitle">Track your progress and continue learning with these interactive games.</p>
+            </div>
+            
+            <div class="games-grid" id="dashboardGamesGrid">
+                <!-- Games will be populated here dynamically -->
             </div>
         </div>
     </section>
@@ -115,36 +205,6 @@
                     </div>
                 </div>
 
-                <!-- Pizza Delivery -->
-                <div class="parent" data-game="pizza-delivery">
-                    <div class="card">
-                        <div class="content-box">
-                            <span class="card-title">Pizza Delivery</span>
-                            <p class="card-content">Deliver pizzas, pay the right gas fees, and avoid scams.</p>
-                            <span class="see-more">Play Now</span>
-                        </div>
-                        <div class="date-box">
-                            <span class="month">Gas</span>
-                            <span class="date">Guru</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Art Gallery -->
-                <div class="parent" data-game="art-gallery">
-                    <div class="card">
-                        <div class="content-box">
-                            <span class="card-title">Art Gallery</span>
-                            <p class="card-content">Mint unique NFTs and curate your personal gallery.</p>
-                            <span class="see-more">Play Now</span>
-                        </div>
-                        <div class="date-box">
-                            <span class="month">Mint</span>
-                            <span class="date">Master</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Medieval Trading Village -->
                 <div class="parent" data-game="medieval-trading">
                     <div class="card">
@@ -175,20 +235,6 @@
                     </div>
                 </div>
 
-                <!-- Factory Assembly Line -->
-                <div class="parent" data-game="factory-assembly">
-                    <div class="card">
-                        <div class="content-box">
-                            <span class="card-title">Factory Assembly Line</span>
-                            <p class="card-content">Get all nodes to approve your blocks by reaching consensus.</p>
-                            <span class="see-more">Play Now</span>
-                        </div>
-                        <div class="date-box">
-                            <span class="month">Consensus</span>
-                            <span class="date">Captain</span>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Island Resource Hunt -->
                 <div class="parent" data-game="island-resource">
@@ -205,35 +251,7 @@
                     </div>
                 </div>
 
-                <!-- Space Cargo Transport -->
-                <div class="parent" data-game="space-cargo">
-                    <div class="card">
-                        <div class="content-box">
-                            <span class="card-title">Space Cargo Transport</span>
-                            <p class="card-content">Deliver cargo faster using Layer 2 hyperlanes.</p>
-                            <span class="see-more">Play Now</span>
-                        </div>
-                        <div class="date-box">
-                            <span class="month">Speedy</span>
-                            <span class="date">Layerer</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Crypto City Builder -->
-                <div class="parent" data-game="crypto-city">
-                    <div class="card">
-                        <div class="content-box">
-                            <span class="card-title">Crypto City Builder</span>
-                            <p class="card-content">Build a city with a blockchain-powered economy.</p>
-                            <span class="see-more">Play Now</span>
-                        </div>
-                        <div class="date-box">
-                            <span class="month">Web3</span>
-                            <span class="date">Hero</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

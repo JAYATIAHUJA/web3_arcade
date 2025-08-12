@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medieval Trading Village – Blockchain Smart Contract Simulator</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua:wght@400;700&family=MedievalSharp&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link rel="stylesheet" href="src/css/modal.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">🏰 Chainshire</span>
+            </div>
+            <div class="nav-menu">
+                <button id="howToPlayNavBtn" class="nav-btn">📖 How to Play</button>
+                <button id="viewLedgerNavBtn" class="nav-btn">📜 Ledger</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="landing-content">
+            <div class="game-title">
+                <h1>🏰 Medieval Trading Village</h1>
+                <h2>Blockchain Smart Contract Simulator</h2>
+            </div>
+            
+            <div class="game-subtitle">
+                <p>Master the art of blockchain trading in the mystical village of Chainshire</p>
+            </div>
+
+            <div class="landing-buttons">
+                <button id="startGameBtn" class="landing-btn primary-btn">🎮 Start Trading</button>
+                <button id="howToPlayBtn" class="landing-btn secondary-btn">📖 How to Play</button>
+                <button id="viewLedgerBtn" class="landing-btn secondary-btn">📜 View Ledger</button>
+            </div>
+
+            <div class="backstory-text">
+                <p>Welcome to Chainshire, traveler! Here, all trades are recorded forever on the Village Ledger using magic scrolls… or as you might call them, blockchain smart contracts.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to Play Modal -->
+    <div id="howToPlayModal" class="modal">
+        <div class="modal-content medieval-modal large-modal">
+            <span class="close" id="howToPlayClose">&times;</span>
+            <h2>📖 How to Play</h2>
+            <div class="tutorial-content">
+                <div class="tutorial-section">
+                    <h3>🎯 Your Mission</h3>
+                    <p>As a merchant in Chainshire, you'll trade goods with villagers using blockchain-powered smart contracts. Each trade is recorded permanently on the Village Ledger.</p>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3>💰 Your Wallet</h3>
+                    <p>Your wallet contains different tokens: WHEAT 🌾, IRON ⛏️, WOOL 🐑, SPICES 🌶️, GOLD COINS 🪙, BREAD 🍞, SILK 🧶, IRON SWORD ⚔️, and WINE BARREL 🏺. Use them wisely!</p>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3>📜 Smart Contracts</h3>
+                    <p>Each trade is a smart contract that automatically executes when you sign it. The contract ensures fair trading and prevents fraud.</p>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3>⛏️ Gas Fees</h3>
+                    <p>Every transaction requires a small gas fee (in GOLD COINS) to pay the village miners who process your trade.</p>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3>🏛️ Consensus</h3>
+                    <p>The village judges (nodes) must approve your transaction. If 2 out of 3 approve, your trade goes through!</p>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>🎮 Game Steps</h3>
+                    <ol>
+                        <li><strong>Review the Contract:</strong> Read the smart contract code carefully</li>
+                        <li><strong>Check Your Resources:</strong> Ensure you have enough tokens and gold for gas fees</li>
+                        <li><strong>Sign & Execute:</strong> Click to approve the trade</li>
+                        <li><strong>Watch Mining:</strong> See the transaction being processed</li>
+                        <li><strong>Consensus Vote:</strong> Watch the village judges approve your trade</li>
+                        <li><strong>Receive Rewards:</strong> Get your new resources and continue trading</li>
+                    </ol>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>🏆 Level Progression</h3>
+                    <p>Complete trades to advance through 10 levels, each teaching different blockchain concepts:</p>
+                    <ul>
+                        <li><strong>Level 1:</strong> Basic Trading - Learn smart contract execution</li>
+                        <li><strong>Level 2:</strong> Gas Fees - Understand transaction costs</li>
+                        <li><strong>Level 3:</strong> Multi-Token Trades - Execute complex exchanges</li>
+                        <li><strong>Level 4:</strong> Smart Contract Conditions - Learn conditional logic</li>
+                        <li><strong>Level 5:</strong> Scam Detection - Identify fraudulent offers</li>
+                        <li><strong>Level 6:</strong> Consensus Validation - Participate in consensus</li>
+                        <li><strong>Level 7:</strong> Multi-Party Trades - Execute complex deals</li>
+                        <li><strong>Level 8:</strong> Double-Spending Prevention - Learn blockchain security</li>
+                        <li><strong>Level 9:</strong> Supply & Demand - Understand tokenomics</li>
+                        <li><strong>Level 10:</strong> Decentralized Marketplace - Master the complete system</li>
+                    </ul>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>🎯 Level Completion</h3>
+                    <p>Each level requires completing a specific number of trades:</p>
+                    <ul>
+                        <li>Levels 1-5: Complete 2 trades each</li>
+                        <li>Level 6: Complete 1 trade (scam detection)</li>
+                        <li>Levels 7-10: Complete 2 trades each</li>
+                    </ul>
+                    <p>After completing a level, you'll earn a badge and advance to the next level with new villagers and challenges!</p>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>⚠️ Important Tips</h3>
+                    <ul>
+                        <li>Always check your inventory before trading</li>
+                        <li>Be careful of suspicious offers (some are scams!)</li>
+                        <li>Gas fees are required for every transaction</li>
+                        <li>Check the ledger to see your trading history</li>
+                        <li>Use keyboard shortcuts: Ctrl+H for help, Ctrl+L for ledger</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Dashboard -->
+    <div id="playerDashboard" class="page">
+        <div class="dashboard-header">
+            <div class="player-info">
+                <h2>Welcome, Merchant! 🏰</h2>
+                <div class="player-level">Level <span id="playerLevel">1</span> Merchant</div>
+            </div>
+            <button id="backToLandingBtn" class="logout-btn">Back to Village</button>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Wallet Section -->
+            <div class="wallet-section">
+                <h3>💰 Merchant's Wallet</h3>
+                <div class="wallet-tokens">
+                    <div class="token-item">
+                        <span class="token-icon">🌾</span>
+                        <span class="token-name">WHEAT</span>
+                        <span class="token-amount" id="wheatAmount">10</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">⛏️</span>
+                        <span class="token-name">IRON</span>
+                        <span class="token-amount" id="ironAmount">5</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">🐑</span>
+                        <span class="token-name">WOOL</span>
+                        <span class="token-amount" id="woolAmount">8</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">🌶️</span>
+                        <span class="token-name">SPICES</span>
+                        <span class="token-amount" id="spicesAmount">3</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">🪙</span>
+                        <span class="token-name">GOLD COINS</span>
+                        <span class="token-amount" id="goldAmount">50</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">🍞</span>
+                        <span class="token-name">BREAD</span>
+                        <span class="token-amount" id="breadAmount">0</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">🧶</span>
+                        <span class="token-name">SILK</span>
+                        <span class="token-amount" id="silkAmount">2</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">⚔️</span>
+                        <span class="token-name">IRON SWORD</span>
+                        <span class="token-amount" id="ironSwordAmount">0</span>
+                    </div>
+                    <div class="token-item">
+                        <span class="token-icon">🏺</span>
+                        <span class="token-name">WINE BARREL</span>
+                        <span class="token-amount" id="wineBarrelAmount">0</span>
+                    </div>
+                </div>
+                <button id="viewLedgerBtn2" class="wallet-btn">📜 View Ledger</button>
+            </div>
+
+            <!-- Trading Section -->
+            <div class="trading-section">
+                <div class="villager-offer">
+                    <div class="villager-avatar" id="villagerAvatar">👨‍🌾</div>
+                    <div class="villager-info">
+                        <h4 id="villagerName">Farmer Edric</h4>
+                        <p id="villagerDialogue">Greetings, merchant! I have a trade offer for you...</p>
+                    </div>
+                </div>
+
+                <div class="contract-preview">
+                    <h4>📜 Smart Contract</h4>
+                    <pre id="contractCode" class="contract-code">
+contract Trade {
+  function execute() public {
+    require(playerWheat >= 5, "Not enough wheat");
+    transfer(player, villager, 5 WHEAT);
+    transfer(villager, player, 3 IRON);
+  }
+}
+                    </pre>
+                </div>
+
+                <div class="trade-actions">
+                    <button id="signTransactionBtn" class="action-btn primary-btn">✍️ Sign & Execute</button>
+                    <button id="rejectTradeBtn" class="action-btn secondary-btn">❌ Reject Trade</button>
+                </div>
+            </div>
+
+            <!-- Status Feed -->
+            <div class="status-feed">
+                <h3>📰 Village News</h3>
+                <div id="statusMessages" class="status-messages">
+                    <div class="status-message">
+                        <span class="status-time">12:00 PM</span>
+                        <span class="status-text">Welcome to Chainshire! Ready to start trading?</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Simulation Modal -->
+    <div id="transactionModal" class="modal">
+        <div class="modal-content medieval-modal">
+            <span class="close" id="transactionClose">&times;</span>
+            <h2>⛏️ Mining Transaction</h2>
+            <div class="transaction-details">
+                <div class="transaction-info">
+                    <h4>Transaction Details</h4>
+                    <div id="transactionDetails"></div>
+                </div>
+                
+                <div class="mining-progress">
+                    <h4>Mining Progress</h4>
+                    <div class="progress-bar">
+                        <div id="miningProgress" class="progress-fill"></div>
+                    </div>
+                    <p id="miningStatus">Starting mining process...</p>
+                </div>
+                
+                <div class="gas-fee">
+                    <h4>Gas Fee</h4>
+                    <p id="gasFeeAmount">0.3 GOLD COINS</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consensus Modal -->
+    <div id="consensusModal" class="modal">
+        <div class="modal-content medieval-modal">
+            <span class="close" id="consensusClose">&times;</span>
+            <h2>🏛️ Village Consensus</h2>
+            <div class="consensus-judges">
+                <div class="judge" id="judge1">
+                    <div class="judge-avatar">👨‍⚖️</div>
+                    <div class="judge-name">Judge Aldric</div>
+                    <div class="judge-vote" id="judge1Vote">Thinking...</div>
+                </div>
+                <div class="judge" id="judge2">
+                    <div class="judge-avatar">👩‍⚖️</div>
+                    <div class="judge-name">Judge Elara</div>
+                    <div class="judge-vote" id="judge2Vote">Thinking...</div>
+                </div>
+                <div class="judge" id="judge3">
+                    <div class="judge-avatar">👨‍⚖️</div>
+                    <div class="judge-name">Judge Thorne</div>
+                    <div class="judge-vote" id="judge3Vote">Thinking...</div>
+                </div>
+            </div>
+            <div class="consensus-result" id="consensusResult">
+                <h4>Voting in progress...</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Village Ledger Modal -->
+    <div id="ledgerModal" class="modal">
+        <div class="modal-content medieval-modal large-modal">
+            <span class="close" id="ledgerClose">&times;</span>
+            <h2>📜 Village Ledger</h2>
+            <div class="ledger-controls">
+                <button class="filter-btn active" data-filter="all">All Transactions</button>
+                <button class="filter-btn" data-filter="successful">Successful</button>
+                <button class="filter-btn" data-filter="failed">Failed</button>
+                <button class="filter-btn" data-filter="current">Current Level</button>
+            </div>
+            <div id="ledgerContent" class="ledger-content">
+                <!-- Ledger blocks will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Level Complete Modal -->
+    <div id="levelCompleteModal" class="modal">
+        <div class="modal-content medieval-modal">
+            <span class="close" id="levelCompleteClose">&times;</span>
+            <h2>🎉 Level Complete!</h2>
+            <div class="level-rewards">
+                <div class="badge-earned">
+                    <h3 id="badgeTitle">Contract Coder</h3>
+                    <div class="badge-icon" id="badgeIcon">📜</div>
+                    <p id="badgeDescription">You've mastered basic smart contracts!</p>
+                </div>
+                <div class="level-stats">
+                    <h4>Level Statistics</h4>
+                    <div id="levelStats"></div>
+                </div>
+            </div>
+            <div class="level-actions">
+                <button id="nextLevelBtn" class="action-btn primary-btn">Next Level</button>
+                <button id="continueTradingBtn" class="action-btn secondary-btn">Continue Trading</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Complete Modal -->
+    <div id="gameCompleteModal" class="modal">
+        <div class="modal-content medieval-modal">
+            <span class="close" id="gameCompleteClose">&times;</span>
+            <h2>🏆 Congratulations!</h2>
+            <div class="game-complete-content">
+                <h3>You've mastered the Medieval Trading Village!</h3>
+                <div class="final-stats">
+                    <h4>Final Statistics</h4>
+                    <div id="finalStats"></div>
+                </div>
+                <div class="all-badges">
+                    <h4>All Badges Earned</h4>
+                    <div id="allBadges"></div>
+                </div>
+            </div>
+            <div class="game-actions">
+                <button id="playAgainBtn" class="action-btn primary-btn">Play Again</button>
+                <button id="backToArcadeBtn" class="action-btn secondary-btn">Back to Arcade</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/gameState.js"></script>
+    <script src="src/js/trading.js"></script>
+    <script src="src/js/ledger.js"></script>
+    <script src="src/js/consensus.js"></script>
+    <script src="src/js/levels.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,543 @@
+/* Medieval Trading Village - Animations */
+
+/* Page Transitions */
+.page {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.page.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Button Animations */
+.landing-btn,
+.action-btn,
+.submit-btn,
+.wallet-btn,
+.nav-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-btn::before,
+.action-btn::before,
+.submit-btn::before,
+.wallet-btn::before,
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.landing-btn:hover::before,
+.action-btn:hover::before,
+.submit-btn:hover::before,
+.wallet-btn:hover::before,
+.nav-btn:hover::before {
+    left: 100%;
+}
+
+/* Token Item Animations */
+.token-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.token-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.token-item:hover::before {
+    left: 100%;
+}
+
+/* Villager Avatar Animations */
+.villager-avatar {
+    animation: gentleBounce 3s ease-in-out infinite;
+}
+
+@keyframes gentleBounce {
+    0%, 100% { 
+        transform: translateY(0) rotate(0deg); 
+    }
+    25% { 
+        transform: translateY(-8px) rotate(-2deg); 
+    }
+    75% { 
+        transform: translateY(-4px) rotate(2deg); 
+    }
+}
+
+/* Contract Code Typing Effect */
+.contract-code {
+    position: relative;
+}
+
+.contract-code::after {
+    content: '|';
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--gold);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Status Message Animations */
+.status-message {
+    animation: slideInFromRight 0.5s ease;
+    position: relative;
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Mining Animation */
+.mining-pick {
+    animation: miningSwing 1.2s ease-in-out infinite;
+}
+
+@keyframes miningSwing {
+    0%, 100% { 
+        transform: rotate(0deg) translateY(0); 
+    }
+    25% { 
+        transform: rotate(-20deg) translateY(-5px); 
+    }
+    50% { 
+        transform: rotate(0deg) translateY(-10px); 
+    }
+    75% { 
+        transform: rotate(20deg) translateY(-5px); 
+    }
+}
+
+/* Progress Bar Animation */
+.progress-bar {
+    animation: progressGlow 2s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+    0%, 100% { 
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); 
+    }
+    50% { 
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); 
+    }
+}
+
+/* Judge Vote Animations */
+.judge-vote {
+    animation: votePulse 0.5s ease;
+}
+
+@keyframes votePulse {
+    0% { 
+        transform: scale(1); 
+    }
+    50% { 
+        transform: scale(1.2); 
+    }
+    100% { 
+        transform: scale(1); 
+    }
+}
+
+.judge-vote.approved {
+    animation: approvedGlow 1s ease;
+}
+
+@keyframes approvedGlow {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+    50% { 
+        transform: scale(1.3);
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+}
+
+.judge-vote.rejected {
+    animation: rejectedShake 0.5s ease;
+}
+
+@keyframes rejectedShake {
+    0%, 100% { 
+        transform: translateX(0); 
+    }
+    25% { 
+        transform: translateX(-5px); 
+    }
+    75% { 
+        transform: translateX(5px); 
+    }
+}
+
+/* Ledger Block Animations */
+.ledger-block {
+    animation: blockAppear 0.6s ease;
+}
+
+@keyframes blockAppear {
+    from {
+        opacity: 0;
+        transform: translateX(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Level Badge Animations */
+.level-badge {
+    animation: badgeGlow 2s ease-in-out infinite;
+}
+
+@keyframes badgeGlow {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+        transform: scale(1.05);
+    }
+}
+
+/* Stat Value Animations */
+.stat-value {
+    animation: countUp 1s ease-out;
+}
+
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Entrance Animations */
+.modal {
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(5px);
+    }
+}
+
+.modal-content {
+    animation: modalSlideUp 0.4s ease;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Filter Button Animations */
+.filter-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    transition: left 0.4s ease;
+}
+
+.filter-btn:hover::before {
+    left: 100%;
+}
+
+/* Wallet Section Animations */
+.wallet-section {
+    animation: walletSlideIn 0.8s ease;
+}
+
+@keyframes walletSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Trading Section Animations */
+.trading-section {
+    animation: tradingSlideIn 0.8s ease 0.2s both;
+}
+
+@keyframes tradingSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status Feed Animations */
+.status-feed {
+    animation: statusSlideIn 0.8s ease 0.4s both;
+}
+
+@keyframes statusSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Landing Page Animations */
+.landing-content {
+    animation: landingFadeIn 1s ease;
+}
+
+@keyframes landingFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.game-title h1 {
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { 
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    50% { 
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 90, 43, 0.5);
+    }
+}
+
+/* Loading Animations */
+.loading {
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% { 
+        opacity: 1; 
+    }
+    50% { 
+        opacity: 0.5; 
+    }
+}
+
+/* Success/Error Animations */
+.success-animation {
+    animation: successBounce 0.6s ease;
+}
+
+@keyframes successBounce {
+    0% { 
+        transform: scale(1); 
+    }
+    50% { 
+        transform: scale(1.1); 
+    }
+    100% { 
+        transform: scale(1); 
+    }
+}
+
+.error-animation {
+    animation: errorShake 0.5s ease;
+}
+
+@keyframes errorShake {
+    0%, 100% { 
+        transform: translateX(0); 
+    }
+    25% { 
+        transform: translateX(-5px); 
+    }
+    75% { 
+        transform: translateX(5px); 
+    }
+}
+
+/* Hover Effects */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.hover-glow {
+    transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Responsive Animations */
+@media (max-width: 768px) {
+    .landing-content {
+        animation: landingFadeInMobile 0.8s ease;
+    }
+    
+    @keyframes landingFadeInMobile {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .wallet-section,
+    .trading-section,
+    .status-feed {
+        animation: mobileSlideIn 0.6s ease;
+    }
+    
+    @keyframes mobileSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        animation: modalSlideUpMobile 0.3s ease;
+    }
+    
+    @keyframes modalSlideUpMobile {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .landing-btn,
+    .action-btn {
+        animation: buttonPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes buttonPulse {
+        0%, 100% { 
+            transform: scale(1); 
+        }
+        50% { 
+            transform: scale(1.02); 
+        }
+    }
+}
+
+/* Performance Optimizations */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .page {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    
+    .modal {
+        display: none !important;
+    }
+    
+    .landing-btn,
+    .action-btn,
+    .nav-btn {
+        display: none !important;
+    }
+}
