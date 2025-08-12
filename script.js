@@ -52,23 +52,8 @@ function handleGameClick(e) {
     e.preventDefault();
     e.stopPropagation();
     
-    console.log('Game link clicked - checking authentication...');
+    console.log('Game link clicked - proceeding to game...');
     
-    // Check if user is logged in
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const username = localStorage.getItem("username");
-    
-    console.log('Auth check - isLoggedIn:', isLoggedIn, 'username:', username);
-    
-    if (!isLoggedIn || !username) {
-        // User not logged in - show login prompt
-        console.log('User not logged in - showing login prompt');
-        showLoginPrompt();
-        return;
-    }
-    
-    // User is logged in - proceed to game
-    console.log('User is logged in - proceeding to game');
     const gameCard = this.closest('[data-game]');
     const gameName = gameCard ? gameCard.dataset.game : 'Unknown Game';
     
@@ -84,11 +69,11 @@ function handleGameClick(e) {
     } else if (gameName === 'museum-treasure-hunt') {
         window.location.href = 'games/blockchain-museum/index.html';
     } else if (gameName === 'bakery-checkout') {
-        window.location.href = 'games/bakery-checkout/index.html';
+        window.location.href = 'https://sparkling-leltwo-4bf252.netlify.app/';
     } else if (gameName === 'medieval-trading') {
         window.location.href = 'games/medieval-trading-village/index.html';
     } else if (gameName === 'island-resource') {
-        window.location.href = 'games/island-token-traders/index.html';
+        window.location.href = 'https://island-token-traders.lovable.app';
     } else {
         showGameLoadingAlert(gameName);
     }
@@ -168,17 +153,7 @@ function initializeButtonHandlers() {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Check if user is logged in
-            const isLoggedIn = localStorage.getItem("isLoggedIn");
-            const username = localStorage.getItem("username");
-            
-            if (!isLoggedIn || !username) {
-                // User not logged in - show login prompt
-                showLoginPrompt();
-                return;
-            }
-            
-            // User is logged in - proceed to game
+            // Proceed to game directly
             const gameCard = this.closest('[data-game]');
             const gameName = gameCard ? gameCard.dataset.game : 'Unknown Game';
             this.style.transform = 'scale(0.95)';
@@ -205,23 +180,8 @@ function initializeButtonHandlers() {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Game link clicked - checking authentication...');
+            console.log('Game link clicked - proceeding to game...');
             
-            // Check if user is logged in
-            const isLoggedIn = localStorage.getItem("isLoggedIn");
-            const username = localStorage.getItem("username");
-            
-            console.log('Auth check - isLoggedIn:', isLoggedIn, 'username:', username);
-            
-            if (!isLoggedIn || !username) {
-                // User not logged in - show login prompt
-                console.log('User not logged in - showing login prompt');
-                showLoginPrompt();
-                return;
-            }
-            
-            // User is logged in - proceed to game
-            console.log('User is logged in - proceeding to game');
             const gameCard = this.closest('[data-game]');
             const gameName = gameCard ? gameCard.dataset.game : 'Unknown Game';
             
@@ -544,10 +504,10 @@ function checkAuthState() {
     console.log("Auth check - isLoggedIn:", isLoggedIn, "username:", username);
     
     if (isLoggedIn && username) {
-        console.log("User is logged in, updating UI to show games");
+        console.log("User is logged in, updating UI to show dashboard");
         updateAuthUI(true, username);
     } else {
-        console.log("User is not logged in, updating UI to show login message");
+        console.log("User is not logged in, games are still accessible");
         updateAuthUI(false);
     }
 }
@@ -633,7 +593,7 @@ function updateAuthUI(isLoggedIn, username = null) {
             `;
         }
         
-        // Games grid is always visible on index.html
+        // Games grid is always visible and playable
         console.log("User is logged in - games are visible and playable");
         
     } else {
@@ -645,8 +605,8 @@ function updateAuthUI(isLoggedIn, username = null) {
             `;
         }
         
-        // Games grid is always visible on index.html, but clicking will prompt login
-        console.log("User is not logged in - games are visible but will prompt login when clicked");
+        // Games grid is always visible and playable (no login required)
+        console.log("User is not logged in - games are visible and playable without login");
     }
 }
 

@@ -203,20 +203,35 @@ class TradingSystem {
 
     // Load current trade
     loadCurrentTrade() {
-        if (window.gameState) {
-            const currentTrade = window.gameState.getCurrentTrade();
-            if (currentTrade) {
-                this.currentTrade = currentTrade;
-                this.updateTradeDisplay();
-            }
+        if (!window.gameState) return;
+        const currentTrade = window.gameState.getCurrentTrade();
+        if (currentTrade) {
+            this.currentTrade = currentTrade;
+            this.updateTradeDisplay();
         }
     }
 
-    // Execute trade
+    // Execute trade (initiates mining + consensus flow)
+    executeTrade() {
+        if (this.isProcessing) return;
+        if (!this.currentTrade) {
+            this.addStatusMessage('No trade available yet.');
+            return;
+        }
+        if (window.gameState && !window.gameState.canExecuteTrade(this.currentTrade)) {
+            this.addStatusMessage('Not enough resources or gold (gas) to execute this contract.');
+            return;
+        }
+        this.isProcessing = true;
+        this.addStatusMessage('Contract signed. Broadcasting transaction...');
+        this.showTransactionModal();
+    }
+
+    // Reject trade (with scam / legit differentiation)
     rejectTrade() {
         if (this.isProcessing) return;
         let msg = 'Trade rejected. Looking for new offers...';
-        if (this.currentTrade) {
+        if (this.currentTrade && window.gameState) {
             if (this.currentTrade.isScam) {
                 window.gameState.applySmartDecisionBonus();
                 msg = 'Scam contract rejected! Smart decision bonus awarded.';
@@ -228,27 +243,6 @@ class TradingSystem {
             }
         }
         this.addStatusMessage(msg);
-        setTimeout(() => {
-            if (window.gameState) {
-                window.gameState.nextTrade();
-                this.loadCurrentTrade();
-            }
-        }, 2000);
-    }
-
-        this.isProcessing = true;
-        this.showTransactionModal();
-    }
-
-    // Reject trade
-    rejectTrade() {
-        if (this.isProcessing) {
-            return;
-        }
-
-        this.addStatusMessage('Trade rejected. Looking for new offers...');
-        
-        // Generate new trade after a short delay
         setTimeout(() => {
             if (window.gameState) {
                 window.gameState.nextTrade();
@@ -522,37 +516,16 @@ class TradingSystem {
         return this.isProcessing;
     }
 
-    // Add status message
-    showTransactionModal() {
-        const modal = document.getElementById('transactionModal');
-        const transactionDetails = document.getElementById('transactionDetails');
-        const gasFeeAmount = document.getElementById('gasFeeAmount');
-
-        if (this.currentTrade && transactionDetails) {
-            const giveText = Object.entries(this.currentTrade.give)
-                .map(([resource, amount]) => `${amount} ${resource}`)
-                .join(', ');
-            const receiveText = Object.entries(this.currentTrade.receive)
-                .map(([resource, amount]) => `${amount} ${resource}`)
-                .join(', ');
-            
-            const details = `
-                <p><strong>From:</strong> Merchant</p>
-                <p><strong>To:</strong> ${this.currentTrade.villager.name}</p>
-                <p><strong>Give:</strong> ${giveText}</p>
-                <p><strong>Receive:</strong> ${receiveText}</p>
-            `;
-            transactionDetails.innerHTML = details;
-        }
-
-        // Use the gas fee from the contract or generate random
-        const gasFee = this.currentTrade.gasFee || (Math.random() * 0.8 + 0.2).toFixed(1);
-        if (gasFeeAmount) {
-            gasFeeAmount.textContent = `${gasFee} GOLD COINS`;
-        }
-
-        this.showModal('transactionModal');
-        this.simulateMining();
+    // Add status message to feed
+    addStatusMessage(message) {
+        const statusMessages = document.getElementById('statusMessages');
+        if (!statusMessages) return;
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const div = document.createElement('div');
+        div.className = 'status-message';
+        div.innerHTML = `<span class="status-time">${time}</span><span class="status-text">${message}</span>`;
+        statusMessages.appendChild(div);
+        statusMessages.scrollTop = statusMessages.scrollHeight;
     }
 }
 

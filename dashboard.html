@@ -432,30 +432,38 @@
     </div>
 
     <script>
-        // Authentication check
+        // Authentication check (now permissive - enables Guest mode if not logged in)
         function checkAuth() {
-            const isLoggedIn = localStorage.getItem("isLoggedIn");
-            const username = localStorage.getItem("username");
-            
+            const isLoggedIn = localStorage.getItem("isLoggedIn") === 'true';
+            let username = localStorage.getItem("username");
+
             if (!isLoggedIn || !username) {
-                window.location.href = "login.html";
-                return false;
+                // Initialize a lightweight guest session (no redirect)
+                if (!localStorage.getItem('guestSessionInitialized')) {
+                    localStorage.setItem('guestSessionInitialized', 'true');
+                    // Only set defaults if real stats absent
+                    if (!localStorage.getItem('totalScore')) {
+                        localStorage.setItem('totalScore', '0');
+                        localStorage.setItem('totalGames', '0');
+                        localStorage.setItem('achievements', '0');
+                        localStorage.setItem('certificates', '0');
+                    }
+                }
+                // Use in-memory guest name (don't persist as username to distinguish from real accounts)
+                username = 'Guest';
+                window.IS_GUEST_MODE = true;
+                return { isLoggedIn: false, username };
             }
-            return true;
+            window.IS_GUEST_MODE = false;
+            return { isLoggedIn: true, username };
         }
 
         // Initialize dashboard
         function initializeDashboard() {
             console.log('Initializing dashboard...');
             
-            if (!checkAuth()) {
-                console.log('Auth check failed - redirecting to login');
-                return;
-            }
-
-            console.log('Auth check passed - loading dashboard data');
-
-            const username = localStorage.getItem("username");
+            const authInfo = checkAuth();
+            const username = authInfo.username || 'Guest';
             const totalScore = parseInt(localStorage.getItem("totalScore") || "0");
             const totalGames = parseInt(localStorage.getItem("totalGames") || "0");
             const achievements = parseInt(localStorage.getItem("achievements") || "0");
@@ -464,9 +472,21 @@
             console.log('Dashboard data:', { username, totalScore, totalGames, achievements, certificates });
 
             // Update profile
-            document.getElementById("playerName").textContent = username;
-            document.getElementById("profileName").textContent = username;
+            const playerNameEl = document.getElementById("playerName");
+            const profileNameEl = document.getElementById("profileName");
+            if (playerNameEl) playerNameEl.textContent = username + (window.IS_GUEST_MODE ? ' (Guest)' : '');
+            if (profileNameEl) profileNameEl.textContent = username + (window.IS_GUEST_MODE ? ' (Guest)' : '');
             document.getElementById("profileAvatar").textContent = username.charAt(0).toUpperCase();
+
+            // Add guest mode banner if needed
+            if (window.IS_GUEST_MODE && !document.getElementById('guestBanner')) {
+                const banner = document.createElement('div');
+                banner.id = 'guestBanner';
+                banner.style.cssText = 'background:linear-gradient(90deg,rgba(0,212,255,0.15),rgba(0,255,136,0.15));border:1px solid rgba(0,255,136,0.4);padding:0.75rem 1rem;border-radius:12px;margin-bottom:1.5rem;font-size:0.9rem;text-align:center;color:var(--text-gray);';
+                banner.innerHTML = 'You are exploring in Guest Mode. <strong>Progress is stored only in this browser</strong>. <a href="login.html" style="color:var(--neon-blue);text-decoration:underline;">Log in</a> to save across devices.';
+                const container = document.querySelector('.welcome-message');
+                if (container) container.parentNode.insertBefore(banner, container.nextSibling);
+            }
 
             // Update stats
             document.getElementById("totalGames").textContent = totalGames;
@@ -599,9 +619,8 @@
         });
 
         // Check auth on page load
-        window.addEventListener("load", function() {
-            if (!checkAuth()) return;
-        });
+    // No redirect on load anymore; just initialize.
+    window.addEventListener("load", function() {});
     </script>
 </body>
 </html>
