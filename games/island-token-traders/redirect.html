@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Island Token Traders - Setup Required</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            color: #4a90e2;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .setup-steps {
+            text-align: left;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        
+        .setup-steps ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .setup-steps li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 0.5rem 0;
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .dev-server-link {
+            background: linear-gradient(45deg, #4a90e2, #ffffff);
+            color: #1a1a2e;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .dev-server-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.4);
+        }
+        
+        .back-link {
+            color: #4a90e2;
+            text-decoration: none;
+            margin-top: 2rem;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #ffffff;
+        }
+        
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏝️ Island Token Traders</h1>
+        <p class="subtitle">This is a React application that needs to be started with a development server.</p>
+        
+        <div class="warning">
+            <strong>⚠️ Note:</strong> This game requires Node.js and npm to be installed on your computer.
+        </div>
+        
+        <div class="setup-steps">
+            <h3>🚀 Quick Setup:</h3>
+            <ol>
+                <li><strong>Open Terminal/Command Prompt</strong></li>
+                <li><strong>Navigate to the game directory:</strong>
+                    <div class="code-block">cd games/island-token-traders</div>
+                </li>
+                <li><strong>Install dependencies:</strong>
+                    <div class="code-block">npm install</div>
+                </li>
+                <li><strong>Start the development server:</strong>
+                    <div class="code-block">npm run dev</div>
+                </li>
+                <li><strong>Open the URL shown in terminal</strong> (usually http://localhost:5173)</li>
+            </ol>
+        </div>
+        
+        <p><strong>🎮 Once the server is running, click the button below:</strong></p>
+        
+        <a href="http://localhost:5173" class="dev-server-link" target="_blank">
+            🎮 Play Island Token Traders (Dev Server)
+        </a>
+        
+        <br>
+        
+        <a href="../../index.html" class="back-link">
+            ← Back to Web3 Arcade
+        </a>
+    </div>
+    
+    <script>
+        // Check if the dev server is running
+        fetch('http://localhost:5173')
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector('.dev-server-link').style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                    document.querySelector('.dev-server-link').textContent = '🎮 Play Island Token Traders (Server Running!)';
+                }
+            })
+            .catch(error => {
+                console.log('Development server not running');
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Unlock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Moving background blobs */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+            z-index: -1;
+        }
+
+        .blob:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #4a90e2, #2c5aa0);
+            top: 10%;
+            left: -150px;
+            animation-duration: 20s;
+        }
+
+        .blob:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #ffffff, #e0e0e0);
+            top: 60%;
+            right: -100px;
+            animation-duration: 25s;
+            animation-direction: reverse;
+        }
+
+        .blob:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #1a1a2e, #000000);
+            top: 30%;
+            left: 70%;
+            animation-duration: 18s;
+        }
+
+        .blob:nth-child(4) {
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, #4a90e2, #ffffff);
+            top: 80%;
+            left: 20%;
+            animation-duration: 22s;
+            animation-direction: reverse;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateX(0) translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateX(100px) translateY(-100px) rotate(120deg);
+            }
+            66% {
+                transform: translateX(-50px) translateY(100px) rotate(240deg);
+            }
+            100% {
+                transform: translateX(0) translateY(0) rotate(360deg);
+            }
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+            animation: fadeInUp 1s ease 0.2s forwards;
+        }
+
+        .checkmarks-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .checkpoint {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideInUp 0.6s ease forwards;
+        }
+
+        .checkpoint:nth-child(1) { animation-delay: 0.3s; }
+        .checkpoint:nth-child(2) { animation-delay: 0.4s; }
+        .checkpoint:nth-child(3) { animation-delay: 0.5s; }
+        .checkpoint:nth-child(4) { animation-delay: 0.6s; }
+
+        .checkpoint:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .checkpoint.completed {
+            background: rgba(74, 144, 226, 0.3);
+            border-color: #4a90e2;
+        }
+
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            position: relative;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+
+        .checkpoint.completed .checkmark {
+            border-color: #4a90e2;
+            background: #4a90e2;
+        }
+
+        .checkmark::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 20px;
+            height: 12px;
+            border: 3px solid white;
+            border-top: none;
+            border-right: none;
+            transform-origin: center;
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .checkpoint.completed .checkmark::after {
+            transform: translate(-50%, -60%) rotate(-45deg) scale(1);
+        }
+
+        .checkpoint-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkpoint-desc {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a90e2, #ffffff);
+            width: 0%;
+            transition: width 0.6s ease;
+            border-radius: 4px;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(45deg, #4a90e2, #ffffff, #000000);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: #1a1a2e;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        .unlock-btn.ready {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+            animation: pulse 2s infinite;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .certificate {
+            /* Blue gradient background */
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #4a90e2 100%);
+            color: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 25px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 8px #ffffff, 0 0 0 12px #000000;
+            animation: certificateSlideIn 0.6s ease;
+            border: 6px solid #ffffff;
+            /* Add decorative pattern overlay */
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.15) 0%, transparent 50%);
+        }
+
+        /* Add decorative elements that work better with html2canvas */
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .certificate::after {
+            content: '✨ ⭐ 🏆 ⭐ ✨';
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .certificate-header {
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            margin-top: 2rem;
+            font-weight: 800;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(45deg, #ffffff, #4a90e2, #000000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .certificate-subheader {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .certificate-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            font-weight: 400;
+        }
+
+        .certificate-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffffff, #4a90e2, #000000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom: 4px solid #ffffff;
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 1.5rem 0;
+            text-shadow: none;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .blockchain-info {
+            background: linear-gradient(135deg, #000000, #1a1a2e, #4a90e2);
+            border: none;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blockchain-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+
+        .blockchain-info > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .blockchain-info h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .blockchain-info p {
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .hash {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 10px;
+            word-break: break-all;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            margin-top: 0.8rem;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
+        .certificate-footer {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 3px solid #ffffff;
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 500;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem -1rem 0 -1rem;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #000000, #4a90e2, #ffffff);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(74, 144, 226, 0.6);
+            background: linear-gradient(45deg, #4a90e2, #ffffff, #000000);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Name Input Section */
+        .name-input-section {
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.4s forwards;
+        }
+
+        .name-label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .name-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .name-input:focus {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .name-input:valid {
+            border-color: #4a90e2;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes certificateSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: sparkle 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Moving background blobs -->
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+
+    <div class="container">
+        <h1>Complete Your Journey</h1>
+        <p class="subtitle">Self evaluate yourself with all the concepts you've learnt and check the boxes. You can always go back and learn if you need.</p>
+        
+        <!-- Name Input Section -->
+        <div class="name-input-section">
+            <label for="userName" class="name-label">Enter Your Name:</label>
+            <input type="text" id="userName" class="name-input" placeholder="e.g., John Doe" maxlength="50">
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="checkmarks-container">
+            <div class="checkpoint" data-checkpoint="1">
+                <div class="checkmark"></div>
+                <div class="checkpoint-title">Foundation Module</div>
+                <div class="checkpoint-desc">Master the basics</div>
+            </div>
+            <div class="checkpoint" data-checkpoint="2">
+                <div class="checkmark"></div>
+                <div class="checkpoint-title">Advanced Concepts</div>
+                <div class="checkpoint-desc">Dive deeper into theory</div>
+            </div>
+            <div class="checkpoint" data-checkpoint="3">
+                <div class="checkmark"></div>
+                <div class="checkpoint-title">Practical Application</div>
+                <div class="checkpoint-desc">Apply your knowledge</div>
+            </div>
+            <div class="checkpoint" data-checkpoint="4">
+                <div class="checkmark"></div>
+                <div class="checkpoint-title">Final Assessment</div>
+                <div class="checkpoint-desc">Prove your expertise</div>
+            </div>
+        </div>
+
+        <button class="unlock-btn" id="unlockBtn">🎓 Unlock Certificate</button>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div class="modal" id="certificateModal">
+        <div class="certificate" id="certificate">
+            <span class="close-btn" id="closeBtn">&times;</span>
+            <div class="certificate-header">🏆 Certificate of Completion</div>
+            <div class="certificate-subheader">Blockchain Verified Achievement</div>
+            
+            <div class="certificate-body">
+                This certifies that
+                <div class="certificate-name" id="certificateName">John Doe</div>
+                has successfully completed all required modules and demonstrated mastery in the comprehensive web3 learning  program.
+            </div>
+
+            <div class="blockchain-info">
+                <h4>🔗 Blockchain Verification</h4>
+                <p><strong>Certificate ID:</strong> CERT-2025-BVC-001247</p>
+                <p><strong>Block Hash:</strong></p>
+                <div class="hash">0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b</div>
+                <p><strong>Timestamp:</strong> August 12, 2025 14:32:18 UTC</p>
+                <p><strong>Network:</strong> Ethereum Mainnet</p>
+            </div>
+
+            <div class="certificate-footer">
+                <p>This certificate is permanently recorded on the blockchain and cannot be altered or forged.</p>
+                <p><strong>Issued by:</strong> Digital Learning Academy | <strong>Date:</strong> August 12, 2025</p>
+            </div>
+
+            <button class="download-btn" id="downloadBtn">
+                📥 Download Certificate (PNG)
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://yxxytqwqpcuojdwdempa.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4eHl0cXdxcGN1b2pkd2RlbXBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwMTQ5MTksImV4cCI6MjA3MDU5MDkxOX0.7tICWVQ7DANyzPH9pEzhlgwR9NBvrpzKuGncbxO6kEw';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        let completedCheckpoints = 0;
+        const totalCheckpoints = 4;
+        let certificateData = null;
+        let currentUser = null;
+        
+        // Get DOM elements
+        const checkpoints = document.querySelectorAll('.checkpoint');
+        const progressFill = document.getElementById('progressFill');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const modal = document.getElementById('certificateModal');
+        const closeBtn = document.getElementById('closeBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const userNameInput = document.getElementById('userName');
+        const certificateName = document.getElementById('certificateName');
+
+        // Load certificate data on page load
+        window.addEventListener('load', async () => {
+            await loadCertificateData();
+        });
+
+        // Add click event to each checkpoint
+        checkpoints.forEach(checkpoint => {
+            checkpoint.addEventListener('click', () => {
+                if (!checkpoint.classList.contains('completed')) {
+                    completeCheckpoint(checkpoint);
+                }
+            });
+        });
+
+        // Update certificate name when user types
+        userNameInput.addEventListener('input', (e) => {
+            const name = e.target.value.trim() || 'John Doe';
+            certificateName.textContent = name;
+        });
+
+        // Load certificate data based on URL parameters
+        async function loadCertificateData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const certificateType = urlParams.get('type');
+            
+            if (!certificateType) {
+                console.log('No certificate type specified, using default certificate');
+                return;
+            }
+
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    console.log('No authenticated user, using default certificate');
+                    return;
+                }
+
+                currentUser = user;
+
+                // Get certificate data from database
+                const { data: certData, error } = await supabase
+                    .from('certificates')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .eq('certificate_type', certificateType)
+                    .single();
+
+                if (error || !certData) {
+                    console.log('Certificate not found, using default certificate');
+                    return;
+                }
+
+                certificateData = certData;
+                
+                // Pre-fill user name
+                const userName = user.user_metadata?.username || user.email?.split('@')[0] || 'Player';
+                userNameInput.value = userName;
+                certificateName.textContent = userName;
+
+                // Auto-complete checkpoints for earned certificates
+                completeAllCheckpoints();
+                
+                console.log('Certificate data loaded:', certData);
+            } catch (error) {
+                console.error('Error loading certificate:', error);
+            }
+        }
+
+        // Auto-complete all checkpoints for earned certificates
+        function completeAllCheckpoints() {
+            checkpoints.forEach(checkpoint => {
+                if (!checkpoint.classList.contains('completed')) {
+                    completeCheckpoint(checkpoint);
+                }
+            });
+        }
+
+        function completeCheckpoint(checkpoint) {
+            checkpoint.classList.add('completed');
+            completedCheckpoints++;
+            
+            // Update progress bar
+            const progressPercentage = (completedCheckpoints / totalCheckpoints) * 100;
+            progressFill.style.width = progressPercentage + '%';
+            
+            // Add sparkle effect
+            createSparkles(checkpoint);
+            
+            // Check if all checkpoints are completed
+            if (completedCheckpoints === totalCheckpoints) {
+                setTimeout(() => {
+                    unlockBtn.classList.add('ready');
+                }, 500);
+            }
+        }
+
+        function createSparkles(element) {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+                    
+                    element.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 1000);
+                }, i * 100);
+            }
+        }
+
+        // Unlock certificate button
+        unlockBtn.addEventListener('click', () => {
+            if (completedCheckpoints === totalCheckpoints) {
+                // Update certificate name before showing modal
+                const name = userNameInput.value.trim() || 'John Doe';
+                certificateName.textContent = name;
+                
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                // Add celebration effect
+                celebrateUnlock();
+            }
+        });
+
+        // Close modal
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function celebrateUnlock() {
+            // Create floating particles
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'fixed';
+                    particle.style.width = '10px';
+                    particle.style.height = '10px';
+                    particle.style.background = '#ffffff';
+                    particle.style.borderRadius = '50%';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = window.innerHeight + 'px';
+                    particle.style.pointerEvents = 'none';
+                    particle.style.zIndex = '9999';
+                    particle.style.animation = 'sparkle 2s ease-out forwards';
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 2000);
+                }, i * 50);
+            }
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        });
+
+        // Canvas-based certificate generation with blue background and white text
+        downloadBtn.addEventListener('click', async () => {
+            try {
+                // Show loading state
+                const originalText = downloadBtn.textContent;
+                downloadBtn.textContent = '⏳ Creating Certificate...';
+                downloadBtn.disabled = true;
+
+                // Get user name and certificate data
+                const userName = userNameInput.value.trim() || 'John Doe';
+                const certName = certificateData?.certificate_name || 'Web3 Fundamentals';
+                const certDescription = certificateData?.certificate_description || 'Comprehensive Web3 Learning Program';
+                const earnedScore = certificateData?.earned_score || 0;
+
+                // Create canvas for certificate
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set high resolution
+                const scale = 2;
+                canvas.width = 800 * scale;
+                canvas.height = 600 * scale;
+                ctx.scale(scale, scale);
+
+                // Create blue gradient background
+                const gradient = ctx.createLinearGradient(0, 0, 800, 600);
+                gradient.addColorStop(0, '#1e3c72');
+                gradient.addColorStop(0.5, '#2a5298');
+                gradient.addColorStop(1, '#4a90e2');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, 800, 600);
+
+                // Add border
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 8;
+                ctx.strokeRect(20, 20, 760, 560);
+
+                // Inner border
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(35, 35, 730, 530);
+
+                // Title
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 36px Arial';
+                ctx.textAlign = 'center';
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 4;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+                ctx.fillText(`🏆 ${certName.toUpperCase()}`, 400, 120);
+
+                // Subtitle
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText('BLOCKCHAIN VERIFIED ACHIEVEMENT', 400, 150);
+
+                // Main text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '20px Arial';
+                ctx.fillText('This certifies that', 400, 200);
+
+                // User name with background
+                const nameWidth = ctx.measureText(userName).width + 40;
+                const nameX = 400 - nameWidth / 2;
+                const nameY = 220;
+
+                // Name background - black with white border
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(nameX, nameY, nameWidth, 50);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(nameX, nameY, nameWidth, 50);
+
+                // Name text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 28px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(userName, 400, 250);
+
+                // Completion text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '18px Arial';
+                ctx.fillText('has successfully completed all required modules', 400, 290);
+                ctx.fillText('and demonstrated mastery in', 400, 315);
+                ctx.fillText(certDescription.toLowerCase(), 400, 340);
+                ctx.fillText(`with a score of ${earnedScore} points.`, 400, 365);
+
+                // Blockchain info box
+                const boxX = 80;
+                const boxY = 370;
+                const boxWidth = 640;
+                const boxHeight = 120;
+
+                // Info box gradient - black to blue
+                const infoGradient = ctx.createLinearGradient(boxX, boxY, boxX + boxWidth, boxY + boxHeight);
+                infoGradient.addColorStop(0, '#000000');
+                infoGradient.addColorStop(0.5, '#1a1a2e');
+                infoGradient.addColorStop(1, '#4a90e2');
+                ctx.fillStyle = infoGradient;
+                ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+                // Info box border
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+                // Info text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'left';
+                ctx.fillText('🔗 Blockchain Verification', boxX + 20, boxY + 25);
+                
+                ctx.font = '14px Arial';
+                const certId = certificateData?.id ? `CERT-${certificateData.id.slice(0, 8).toUpperCase()}` : 'CERT-2025-BVC-001247';
+                const earnedDate = certificateData?.earned_at ? new Date(certificateData.earned_at).toLocaleDateString() : 'August 12, 2025';
+                ctx.fillText(`Certificate ID: ${certId}`, boxX + 20, boxY + 50);
+                ctx.fillText('Block Hash: 0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b', boxX + 20, boxY + 70);
+                ctx.fillText(`Timestamp: ${earnedDate}`, boxX + 20, boxY + 90);
+                ctx.fillText('Network: Ethereum Mainnet', boxX + 20, boxY + 110);
+
+                // Footer
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('This certificate is permanently recorded on the blockchain', 400, 530);
+                ctx.fillText(`Issued by: Digital Learning Academy | Date: ${earnedDate}`, 400, 550);
+
+                // Add decorative elements
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '24px Arial';
+                const decorations = ['✨', '⭐', '🌟', '💎', '🎖️'];
+                for (let i = 0; i < 5; i++) {
+                    const x = 100 + i * 150;
+                    const y = 80;
+                    ctx.fillText(decorations[i], x, y);
+                }
+
+                // Convert to blob and download
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const sanitizedName = userName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-');
+                    const certName = certificateData?.certificate_name || 'Blockchain-Certificate';
+                    link.download = `${certName}-${sanitizedName}.png`;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    console.log('Certificate generated and downloaded successfully');
+                }, 'image/png', 1.0);
+
+                // Reset button
+                downloadBtn.textContent = originalText;
+                downloadBtn.disabled = false;
+
+            } catch (error) {
+                console.error('Certificate generation failed:', error);
+                
+                // Reset button
+                downloadBtn.textContent = '📥 Download Certificate (PNG)';
+                downloadBtn.disabled = false;
+                
+                alert('Failed to generate certificate. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

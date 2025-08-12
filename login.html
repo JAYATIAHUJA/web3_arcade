@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Web3 Arcade</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .auth-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 400px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-subtitle {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            color: var(--text-white);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            padding: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-white);
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(207, 230, 243, 0.6);
+        }
+        
+        .auth-btn {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
+            color: var(--text-dark);
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-shadow);
+        }
+        
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .auth-links {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .auth-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .auth-link:hover {
+            color: var(--neon-cyan);
+            text-decoration: underline;
+        }
+        
+        .back-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .back-home:hover {
+            color: var(--neon-cyan);
+        }
+        
+        .error-message {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid rgba(255, 71, 87, 0.5);
+            color: #ff4757;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--neon-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <a href="index.html" class="back-home">
+        ← Back to Arcade
+    </a>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to continue your Web3 journey</p>
+            </div>
+
+            <div id="message"></div>
+
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="auth-btn" id="loginBtn">
+                    <span id="loginBtnText">Sign In</span>
+                </button>
+            </form>
+
+            <div class="auth-links">
+                <p>Don't have an account? <a href="register.html" class="auth-link">Register here</a></p>
+                <p><a href="#" class="auth-link" id="forgotPassword">Forgot password?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://yxxytqwqpcuojdwdempa.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4eHl0cXdxcGN1b2pkd2RlbXBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwMTQ5MTksImV4cCI6MjA3MDU5MDkxOX0.7tICWVQ7DANyzPH9pEzhlgwR9NBvrpzKuGncbxO6kEw';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginBtnText = document.getElementById('loginBtnText');
+        const messageDiv = document.getElementById('message');
+        const forgotPasswordLink = document.getElementById('forgotPassword');
+
+        // Show message function
+        function showMessage(message, type = 'error') {
+            messageDiv.innerHTML = `<div class="${type}-message">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtnText.innerHTML = '<span class="loading"></span> Signing in...';
+
+            try {
+                // Simple authentication (for demo purposes)
+                // In a real app, you'd validate against a backend
+                if (email && password) {
+                    // Extract username from email (everything before @)
+                    const username = email.split('@')[0];
+                    
+                    // Store authentication data in localStorage
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('email', email);
+                    
+                    // Initialize default stats if not exists
+                    if (!localStorage.getItem('totalScore')) {
+                        localStorage.setItem('totalScore', '0');
+                        localStorage.setItem('totalGames', '0');
+                        localStorage.setItem('achievements', '0');
+                        localStorage.setItem('certificates', '0');
+                    }
+                    
+                    showMessage('Login successful! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showMessage('Please enter both email and password.');
+                }
+            } catch (error) {
+                showMessage('An unexpected error occurred. Please try again.');
+            } finally {
+                // Reset button state
+                loginBtn.disabled = false;
+                loginBtnText.textContent = 'Sign In';
+            }
+        });
+
+        // Handle forgot password
+        forgotPasswordLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            
+            if (!email) {
+                showMessage('Please enter your email address first.');
+                return;
+            }
+
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/reset-password.html'
+                });
+
+                if (error) {
+                    showMessage(error.message);
+                } else {
+                    showMessage('Password reset email sent! Check your inbox.', 'success');
+                }
+            } catch (error) {
+                showMessage('An unexpected error occurred. Please try again.');
+            }
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-info { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .button:hover { background: #0056b3; }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .game-card { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Test</h1>
+    
+    <div class="debug-info">
+        <h3>Authentication Status:</h3>
+        <div id="authStatus"></div>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Actions:</h3>
+        <button class="button" onclick="setLoggedIn()">Set as Logged In</button>
+        <button class="button" onclick="testLoadGames()">Test Load Games</button>
+        <button class="button" onclick="goToDashboard()">Go to Dashboard</button>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Games Grid Test:</h3>
+        <div class="games-grid" id="testGamesGrid">
+            <!-- Games will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        function updateAuthStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const username = localStorage.getItem('username');
+            const status = document.getElementById('authStatus');
+            
+            status.innerHTML = `
+                <p><strong>isLoggedIn:</strong> ${isLoggedIn}</p>
+                <p><strong>username:</strong> ${username}</p>
+                <p><strong>Status:</strong> ${isLoggedIn && username ? 'LOGGED IN' : 'NOT LOGGED IN'}</p>
+            `;
+        }
+        
+        function setLoggedIn() {
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('username', 'testuser');
+            localStorage.setItem('email', 'test@example.com');
+            localStorage.setItem('totalScore', '0');
+            localStorage.setItem('totalGames', '0');
+            localStorage.setItem('achievements', '0');
+            localStorage.setItem('certificates', '0');
+            updateAuthStatus();
+        }
+        
+        function testLoadGames() {
+            const gamesGrid = document.getElementById('testGamesGrid');
+            const games = [
+                {
+                    name: "museum-treasure-hunt",
+                    title: "BlockChain Museum",
+                    description: "Explore a virtual museum and assemble your first blockchain by ordering blocks.",
+                    icon: "🏛️",
+                    url: "games/blockchain-museum/index.html",
+                    progress: 0
+                },
+                {
+                    name: "bakery-checkout",
+                    title: "Bakery Checkout",
+                    description: "Create secure wallets to serve pastry tokens to customers.",
+                    icon: "🏪",
+                    url: "https://sparkling-leltwo-4bf252.netlify.app/",
+                    progress: 0
+                },
+                {
+                    name: "medieval-trading",
+                    title: "Medieval Trading Village",
+                    description: "Negotiate trades using automated smart contracts.",
+                    icon: "🏰",
+                    url: "games/medieval-trading-village/index.html",
+                    progress: 0
+                },
+                {
+                    name: "detective-case",
+                    title: "Detective Case",
+                    description: "Hunt down fake wallets and phishing links hidden in clues.",
+                    icon: "🕵️",
+                    url: "games/detective-case/detective-game-v2.html",
+                    progress: 0
+                },
+                {
+                    name: "island-resource",
+                    title: "Island Resource Hunt",
+                    description: "Manage scarce resources and trade to optimize your economy.",
+                    icon: "🏝️",
+                    url: "https://island-token-traders.lovable.app",
+                    progress: 0
+                }
+            ];
+
+            gamesGrid.innerHTML = games.map(game => `
+                <div class="game-card">
+                    <div class="game-icon">${game.icon}</div>
+                    <h3 class="game-title">${game.title}</h3>
+                    <p class="game-description">${game.description}</p>
+                    <div class="game-progress">
+                        <div class="progress-label">Progress</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${game.progress}%"></div>
+                        </div>
+                        <div class="progress-text">${game.progress}% Complete</div>
+                    </div>
+                    <a href="${game.url}" class="play-btn">Play Now</a>
+                </div>
+            `).join("");
+        }
+        
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Load info on page load
+        updateAuthStatus();
+    </script>
+</body>
+</html>

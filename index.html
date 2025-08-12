@@ -13,6 +13,9 @@
     <!-- Lottie Animation Library -->
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
     
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -46,54 +49,14 @@
                 <li><a href="#games" class="nav-link">Games</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li class="auth-buttons">
-                    <button class="auth-btn login-btn" id="loginBtn">Login</button>
-                    <button class="auth-btn register-btn" id="registerBtn">Register</button>
+                    <a href="login.html" class="auth-btn login-btn">Login</a>
+                    <a href="register.html" class="auth-btn register-btn">Register</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="loginClose">&times;</span>
-            <h2>Login to Arcade</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <input type="text" id="loginUsername" placeholder="Username" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="loginPassword" placeholder="Password" required>
-                </div>
-                <button type="submit" class="submit-btn">Login</button>
-            </form>
-            <p class="form-switch">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
-        </div>
-    </div>
 
-    <!-- Register Modal -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="registerClose">&times;</span>
-            <h2>Join the Arcade</h2>
-            <form id="registerForm">
-                <div class="form-group">
-                    <input type="text" id="registerUsername" placeholder="Username" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="registerEmail" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="registerPassword" placeholder="Password" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-                </div>
-                <button type="submit" class="submit-btn">Create Account</button>
-            </form>
-            <p class="form-switch">Already have an account? <a href="#" id="showLogin">Login here</a></p>
-        </div>
-    </div>
 
     <!-- Hero Section -->
     <section id="hero" class="hero">
@@ -174,14 +137,15 @@
                 <h2 class="section-title">🕹 Our Games</h2>
                 <p class="section-subtitle">Each game is designed to be interactive, theme-based, and challenge-driven, so you're learning without even realizing it.</p>
             </div>
-            <div class="games-grid">
+            <!-- Games Grid (always shown) -->
+            <div id="gamesGrid" class="games-grid">
                 <!-- Museum Treasure Hunt -->
                 <div class="parent" data-game="museum-treasure-hunt">
                     <div class="card">
                         <div class="content-box">
                             <span class="card-title">BlockChain Museum</span>
                             <p class="card-content">Explore a virtual museum and assemble your first blockchain by ordering blocks.</p>
-                            <a href="level1/index.html" class="see-more">Play Now</a>
+                                                         <a href="#" class="see-more" data-launch>Play Now</a>
                         </div>
                         <div class="date-box">
                             <span class="month">NFT</span>
@@ -196,7 +160,7 @@
                         <div class="content-box">
                             <span class="card-title">Bakery Checkout</span>
                             <p class="card-content">Create secure wallets to serve pastry tokens to customers.</p>
-                            <a href="level2/index.html" class="see-more">Play Now</a>
+                                                         <a href="#" class="see-more" data-launch>Play Now</a>
                         </div>
                         <div class="date-box">
                             <span class="month">Wallet</span>
@@ -211,7 +175,7 @@
                         <div class="content-box">
                             <span class="card-title">Medieval Trading Village</span>
                             <p class="card-content">Negotiate trades using automated smart contracts.</p>
-                            <span class="see-more">Play Now</span>
+                                                         <a href="#" class="see-more" data-launch>Play Now</a>
                         </div>
                         <div class="date-box">
                             <span class="month">Contract</span>
@@ -226,7 +190,7 @@
                         <div class="content-box">
                             <span class="card-title">Detective Case</span>
                             <p class="card-content">Hunt down fake wallets and phishing links hidden in clues.</p>
-                            <span class="see-more">Play Now</span>
+                                                         <a href="#" class="see-more" data-launch>Play Now</a>
                         </div>
                         <div class="date-box">
                             <span class="month">Fraud</span>
@@ -235,14 +199,13 @@
                     </div>
                 </div>
 
-
                 <!-- Island Resource Hunt -->
                 <div class="parent" data-game="island-resource">
                     <div class="card">
                         <div class="content-box">
                             <span class="card-title">Island Resource Hunt</span>
                             <p class="card-content">Manage scarce resources and trade to optimize your economy.</p>
-                            <span class="see-more">Play Now</span>
+                                                         <a href="#" class="see-more" data-launch>Play Now</a>
                         </div>
                         <div class="date-box">
                             <span class="month">Token</span>
@@ -250,8 +213,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </section>
@@ -553,5 +514,7 @@
     </footer>
 
     <script src="script.js"></script>
+    <!-- Back To Top Button -->
+    <div class="back-to-top" id="backToTop" aria-label="Back to top" role="button" tabindex="0">↑</div>
 </body>
 </html>

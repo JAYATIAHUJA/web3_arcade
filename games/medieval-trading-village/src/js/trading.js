@@ -213,20 +213,28 @@ class TradingSystem {
     }
 
     // Execute trade
-    executeTrade() {
-        if (this.isProcessing) {
-            return;
+    rejectTrade() {
+        if (this.isProcessing) return;
+        let msg = 'Trade rejected. Looking for new offers...';
+        if (this.currentTrade) {
+            if (this.currentTrade.isScam) {
+                window.gameState.applySmartDecisionBonus();
+                msg = 'Scam contract rejected! Smart decision bonus awarded.';
+                window.gameState.logLedgerEntry(this.currentTrade, 'rejected', 'User declined (scam detected)');
+            } else {
+                window.gameState.applyMissedOpportunityPenalty();
+                msg = 'Legit contract rejected. Missed opportunity penalty applied.';
+                window.gameState.logLedgerEntry(this.currentTrade, 'rejected', 'User declined (missed opportunity)');
+            }
         }
-
-        if (!this.currentTrade) {
-            this.addStatusMessage('No trade available to execute.');
-            return;
-        }
-
-        if (window.gameState && !window.gameState.canExecuteTrade(this.currentTrade)) {
-            this.addStatusMessage('Cannot execute trade: insufficient resources or invalid conditions.');
-            return;
-        }
+        this.addStatusMessage(msg);
+        setTimeout(() => {
+            if (window.gameState) {
+                window.gameState.nextTrade();
+                this.loadCurrentTrade();
+            }
+        }, 2000);
+    }
 
         this.isProcessing = true;
         this.showTransactionModal();
@@ -515,19 +523,36 @@ class TradingSystem {
     }
 
     // Add status message
-    addStatusMessage(message) {
-        const statusMessages = document.getElementById('statusMessages');
-        if (statusMessages) {
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'status-message';
-            messageDiv.innerHTML = `
-                <span class="status-time">${time}</span>
-                <span class="status-text">${message}</span>
+    showTransactionModal() {
+        const modal = document.getElementById('transactionModal');
+        const transactionDetails = document.getElementById('transactionDetails');
+        const gasFeeAmount = document.getElementById('gasFeeAmount');
+
+        if (this.currentTrade && transactionDetails) {
+            const giveText = Object.entries(this.currentTrade.give)
+                .map(([resource, amount]) => `${amount} ${resource}`)
+                .join(', ');
+            const receiveText = Object.entries(this.currentTrade.receive)
+                .map(([resource, amount]) => `${amount} ${resource}`)
+                .join(', ');
+            
+            const details = `
+                <p><strong>From:</strong> Merchant</p>
+                <p><strong>To:</strong> ${this.currentTrade.villager.name}</p>
+                <p><strong>Give:</strong> ${giveText}</p>
+                <p><strong>Receive:</strong> ${receiveText}</p>
             `;
-            statusMessages.appendChild(messageDiv);
-            statusMessages.scrollTop = statusMessages.scrollHeight;
+            transactionDetails.innerHTML = details;
         }
+
+        // Use the gas fee from the contract or generate random
+        const gasFee = this.currentTrade.gasFee || (Math.random() * 0.8 + 0.2).toFixed(1);
+        if (gasFeeAmount) {
+            gasFeeAmount.textContent = `${gasFee} GOLD COINS`;
+        }
+
+        this.showModal('transactionModal');
+        this.simulateMining();
     }
 }
 

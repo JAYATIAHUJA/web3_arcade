@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Web3 Arcade</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lottie Animation Library -->
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            min-height: 100vh;
+            background: var(--primary-bg);
+            padding-top: 80px;
+        }
+        
+        .profile-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .profile-details h2 {
+            color: var(--neon-blue);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-details p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn {
+            background: linear-gradient(135deg, #ff4757, #ff3742);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-shadow-purple);
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon-purple);
+            margin-bottom: 0.25rem;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .certificate-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .certificate-locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+        
+        .certificate-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .certificate-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .certificate-description {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+        
+        .certificate-progress {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar {
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 5px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        .games-section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            color: var(--text-gray);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--glow-shadow-purple);
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+        
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .game-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .game-description {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .game-progress {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .play-btn {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+            color: var(--text-dark);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-shadow-purple);
+        }
+        
+        .welcome-message {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .welcome-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-text {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">Blockadia</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#games" class="nav-link">Games</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="container">
+            <!-- Welcome Message -->
+            <div class="welcome-message">
+                <h1 class="welcome-title">Welcome back, <span id="playerName">Player</span>! 🎮</h1>
+                <p class="welcome-text">Ready to continue your Web3 learning journey?</p>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="profile-info">
+                    <div class="profile-avatar" id="profileAvatar">P</div>
+                    <div class="profile-details">
+                        <h2 id="profileName">Player</h2>
+                        <p>Web3 Learner</p>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number" id="totalGames">0</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-number" id="totalScore">0</div>
+                    <div class="stat-label">Total Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number" id="achievements">0</div>
+                    <div class="stat-label">Achievements</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number" id="certificates">0</div>
+                    <div class="stat-label">Certificates</div>
+                </div>
+            </div>
+
+            <!-- Certificate Section -->
+            <div class="certificate-section" id="certificateSection">
+                <div class="certificate-icon" id="certificateIcon">🏆</div>
+                <h3 class="certificate-title" id="certificateTitle">Web3 Hero Certificate</h3>
+                <p class="certificate-description">Complete all games with a total score of 90+ to unlock your Web3 Hero certificate!</p>
+                <div class="certificate-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="certificateProgress"></div>
+                    </div>
+                    <div class="progress-text" id="certificateProgressText">0/90 points</div>
+                </div>
+            </div>
+
+            <!-- Games Section -->
+            <div class="games-section">
+                <h2 class="section-title">🕹 Your Games</h2>
+                <p class="section-subtitle">Track your progress and continue learning with these interactive games.</p>
+                
+                <div class="games-grid" id="gamesGrid">
+                    <!-- Games will be populated here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication check
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            const username = localStorage.getItem("username");
+            
+            if (!isLoggedIn || !username) {
+                window.location.href = "login.html";
+                return false;
+            }
+            return true;
+        }
+
+        // Initialize dashboard
+        function initializeDashboard() {
+            console.log('Initializing dashboard...');
+            
+            if (!checkAuth()) {
+                console.log('Auth check failed - redirecting to login');
+                return;
+            }
+
+            console.log('Auth check passed - loading dashboard data');
+
+            const username = localStorage.getItem("username");
+            const totalScore = parseInt(localStorage.getItem("totalScore") || "0");
+            const totalGames = parseInt(localStorage.getItem("totalGames") || "0");
+            const achievements = parseInt(localStorage.getItem("achievements") || "0");
+            const certificates = parseInt(localStorage.getItem("certificates") || "0");
+
+            console.log('Dashboard data:', { username, totalScore, totalGames, achievements, certificates });
+
+            // Update profile
+            document.getElementById("playerName").textContent = username;
+            document.getElementById("profileName").textContent = username;
+            document.getElementById("profileAvatar").textContent = username.charAt(0).toUpperCase();
+
+            // Update stats
+            document.getElementById("totalGames").textContent = totalGames;
+            document.getElementById("totalScore").textContent = totalScore;
+            document.getElementById("achievements").textContent = achievements;
+            document.getElementById("certificates").textContent = certificates;
+
+            // Update certificate progress
+            updateCertificateProgress(totalScore);
+
+            // Load games
+            console.log('Loading games...');
+            loadGames();
+        }
+
+        // Update certificate progress
+        function updateCertificateProgress(totalScore) {
+            const progressFill = document.getElementById("certificateProgress");
+            const progressText = document.getElementById("certificateProgressText");
+            const certificateSection = document.getElementById("certificateSection");
+            const certificateIcon = document.getElementById("certificateIcon");
+            const certificateTitle = document.getElementById("certificateTitle");
+
+            const progress = Math.min(100, (totalScore / 90) * 100);
+            progressFill.style.width = progress + "%";
+            progressText.textContent = `${totalScore}/90 points`;
+
+            if (totalScore >= 90) {
+                certificateSection.classList.remove("certificate-locked");
+                certificateIcon.textContent = "🏆";
+                certificateTitle.textContent = "Web3 Hero Certificate - UNLOCKED!";
+                certificateTitle.style.color = "#00ff88";
+            } else {
+                certificateSection.classList.add("certificate-locked");
+                certificateIcon.textContent = "🔒";
+                certificateTitle.textContent = "Web3 Hero Certificate";
+                certificateTitle.style.color = "var(--neon-blue)";
+            }
+        }
+
+        // Load games
+        function loadGames() {
+            console.log('loadGames function called');
+            const gamesGrid = document.getElementById("gamesGrid");
+            console.log('Games grid element:', gamesGrid);
+            
+            const games = [
+                {
+                    name: "museum-treasure-hunt",
+                    title: "BlockChain Museum",
+                    description: "Explore a virtual museum and assemble your first blockchain by ordering blocks.",
+                    icon: "🏛️",
+                    url: "games/blockchain-museum/index.html",
+                    progress: getGameProgress("museum-treasure-hunt")
+                },
+                {
+                    name: "bakery-checkout",
+                    title: "Bakery Checkout",
+                    description: "Create secure wallets to serve pastry tokens to customers.",
+                    icon: "🏪",
+                    url: "https://sparkling-leltwo-4bf252.netlify.app/",
+                    progress: getGameProgress("bakery-checkout")
+                },
+                {
+                    name: "medieval-trading",
+                    title: "Medieval Trading Village",
+                    description: "Negotiate trades using automated smart contracts.",
+                    icon: "🏰",
+                    url: "games/medieval-trading-village/index.html",
+                    progress: getGameProgress("medieval-trading")
+                },
+                {
+                    name: "detective-case",
+                    title: "Detective Case",
+                    description: "Hunt down fake wallets and phishing links hidden in clues.",
+                    icon: "🕵️",
+                    url: "games/detective-case/detective-game-v2.html",
+                    progress: getGameProgress("detective-case")
+                },
+                {
+                    name: "island-resource",
+                    title: "Island Resource Hunt",
+                    description: "Manage scarce resources and trade to optimize your economy.",
+                    icon: "🏝️",
+                    url: "https://island-token-traders.lovable.app",
+                    progress: getGameProgress("island-resource")
+                }
+            ];
+
+            console.log('Games array:', games);
+            
+            const gamesHTML = games.map(game => `
+                <div class="game-card">
+                    <div class="game-icon">${game.icon}</div>
+                    <h3 class="game-title">${game.title}</h3>
+                    <p class="game-description">${game.description}</p>
+                    <div class="game-progress">
+                        <div class="progress-label">Progress</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${game.progress}%"></div>
+                        </div>
+                        <div class="progress-text">${game.progress}% Complete</div>
+                    </div>
+                    <a href="${game.url}" class="play-btn">Play Now</a>
+                </div>
+            `).join("");
+            
+            console.log('Generated HTML length:', gamesHTML.length);
+            gamesGrid.innerHTML = gamesHTML;
+            console.log('Games loaded successfully');
+        }
+
+        // Get game progress from localStorage
+        function getGameProgress(gameName) {
+            const progress = localStorage.getItem(`gameProgress_${gameName}`);
+            return progress ? parseInt(progress) : 0;
+        }
+
+        // Handle logout
+        function handleLogout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        // Event listeners
+        document.addEventListener("DOMContentLoaded", function() {
+            initializeDashboard();
+            
+            document.getElementById("logoutBtn").addEventListener("click", handleLogout);
+        });
+
+        // Check auth on page load
+        window.addEventListener("load", function() {
+            if (!checkAuth()) return;
+        });
+    </script>
+</body>
+</html>

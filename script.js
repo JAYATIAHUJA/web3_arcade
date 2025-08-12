@@ -8,7 +8,91 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFloatingShapes();
     initializeAuthentication();
     initializeDashboard();
+    checkAuthState();
+    
+    // Additional event listener for game links (backup)
+    setTimeout(() => {
+        attachGameLinkListeners();
+    }, 100);
+    
+    // Global click handler for any game links
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('see-more') || e.target.closest('.see-more')) {
+            const link = e.target.classList.contains('see-more') ? e.target : e.target.closest('.see-more');
+            if (link) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleGameClick.call(link, e);
+            }
+        }
+    });
 });
+
+// Function to attach game link listeners
+function attachGameLinkListeners() {
+    console.log('Attaching game link listeners...');
+    
+    // Remove any existing listeners first
+    const existingLinks = document.querySelectorAll('.see-more');
+    existingLinks.forEach(link => {
+        link.removeEventListener('click', handleGameClick);
+    });
+    
+    // Add new listeners
+    const allGameLinks = document.querySelectorAll('.see-more, .games-grid .see-more, .see-more[data-launch]');
+    console.log('Found game links:', allGameLinks.length);
+    
+    allGameLinks.forEach(link => {
+        link.addEventListener('click', handleGameClick);
+    });
+}
+
+// Game click handler
+function handleGameClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('Game link clicked - checking authentication...');
+    
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const username = localStorage.getItem("username");
+    
+    console.log('Auth check - isLoggedIn:', isLoggedIn, 'username:', username);
+    
+    if (!isLoggedIn || !username) {
+        // User not logged in - show login prompt
+        console.log('User not logged in - showing login prompt');
+        showLoginPrompt();
+        return;
+    }
+    
+    // User is logged in - proceed to game
+    console.log('User is logged in - proceeding to game');
+    const gameCard = this.closest('[data-game]');
+    const gameName = gameCard ? gameCard.dataset.game : 'Unknown Game';
+    
+    console.log('Game name:', gameName);
+    
+    // Add loading effect
+    this.style.transform = 'scale(0.95)';
+    setTimeout(() => { this.style.transform = ''; }, 150);
+    
+    // Navigate to game
+    if (gameName === 'detective-case') {
+        window.location.href = 'games/detective-case/detective-game-v2.html';
+    } else if (gameName === 'museum-treasure-hunt') {
+        window.location.href = 'games/blockchain-museum/index.html';
+    } else if (gameName === 'bakery-checkout') {
+        window.location.href = 'games/bakery-checkout/index.html';
+    } else if (gameName === 'medieval-trading') {
+        window.location.href = 'games/medieval-trading-village/index.html';
+    } else if (gameName === 'island-resource') {
+        window.location.href = 'games/island-token-traders/index.html';
+    } else {
+        showGameLoadingAlert(gameName);
+    }
+}
 
 // Smooth Scrolling for Navigation Links
 function initializeSmoothScrolling() {
@@ -78,11 +162,23 @@ function initializeButtonHandlers() {
         });
     }
     
-    // Play Now Buttons
+    // Play Now Buttons (for old style buttons)
     const playButtons = document.querySelectorAll('.play-button');
     playButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            const username = localStorage.getItem("username");
+            
+            if (!isLoggedIn || !username) {
+                // User not logged in - show login prompt
+                showLoginPrompt();
+                return;
+            }
+            
+            // User is logged in - proceed to game
             const gameCard = this.closest('[data-game]');
             const gameName = gameCard ? gameCard.dataset.game : 'Unknown Game';
             this.style.transform = 'scale(0.95)';
@@ -101,18 +197,51 @@ function initializeButtonHandlers() {
             }, 600);
         });
     });
-
-    // New 3D card "See More" buttons
-    const seeMoreButtons = document.querySelectorAll('.games-grid .see-more');
-    seeMoreButtons.forEach(btn => {
-        btn.addEventListener('click', function(e) {
+    
+    // Game card "Play Now" links (see-more class) - ALL GAME LINKS
+    const allGameLinks = document.querySelectorAll('.see-more, .games-grid .see-more, .see-more[data-launch]');
+    allGameLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
-            const parent = this.closest('[data-game]');
-            const gameName = parent ? parent.dataset.game : 'Unknown Game';
-            this.style.transform = 'scale(0.95) translateZ(20px)';
-            setTimeout(() => { this.style.transform = 'translateZ(20px)'; }, 150);
+            e.stopPropagation();
+            
+            console.log('Game link clicked - checking authentication...');
+            
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            const username = localStorage.getItem("username");
+            
+            console.log('Auth check - isLoggedIn:', isLoggedIn, 'username:', username);
+            
+            if (!isLoggedIn || !username) {
+                // User not logged in - show login prompt
+                console.log('User not logged in - showing login prompt');
+                showLoginPrompt();
+                return;
+            }
+            
+            // User is logged in - proceed to game
+            console.log('User is logged in - proceeding to game');
+            const gameCard = this.closest('[data-game]');
+            const gameName = gameCard ? gameCard.dataset.game : 'Unknown Game';
+            
+            console.log('Game name:', gameName);
+            
+            // Add loading effect
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => { this.style.transform = ''; }, 150);
+            
+            // Navigate to game
             if (gameName === 'detective-case') {
                 window.location.href = 'games/detective-case/detective-game-v2.html';
+            } else if (gameName === 'museum-treasure-hunt') {
+                window.location.href = 'games/blockchain-museum/index.html';
+            } else if (gameName === 'bakery-checkout') {
+                window.location.href = 'https://sparkling-leltwo-4bf252.netlify.app/';
+            } else if (gameName === 'medieval-trading') {
+                window.location.href = 'games/medieval-trading-village/index.html';
+            } else if (gameName === 'island-resource') {
+                window.location.href = 'https://island-token-traders.lovable.app';
             } else {
                 showGameLoadingAlert(gameName);
             }
@@ -403,406 +532,127 @@ console.log(`
 
 // Authentication System
 function initializeAuthentication() {
-    const loginModal = document.getElementById('loginModal');
-    const registerModal = document.getElementById('registerModal');
-    const loginBtn = document.getElementById('loginBtn');
-    const registerBtn = document.getElementById('registerBtn');
-    const loginClose = document.getElementById('loginClose');
-    const registerClose = document.getElementById('registerClose');
-    const showRegister = document.getElementById('showRegister');
-    const showLogin = document.getElementById('showLogin');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-
-    // Show modals
-    loginBtn.addEventListener('click', () => {
-        loginModal.style.display = 'block';
-    });
-
-    registerBtn.addEventListener('click', () => {
-        registerModal.style.display = 'block';
-    });
-
-    // Close modals
-    loginClose.addEventListener('click', () => {
-        loginModal.style.display = 'none';
-    });
-
-    registerClose.addEventListener('click', () => {
-        registerModal.style.display = 'none';
-    });
-
-    // Close modals when clicking outside
-    window.addEventListener('click', (e) => {
-        if (e.target === loginModal) {
-            loginModal.style.display = 'none';
-        }
-        if (e.target === registerModal) {
-            registerModal.style.display = 'none';
-        }
-    });
-
-    // Switch between modals
-    showRegister.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginModal.style.display = 'none';
-        registerModal.style.display = 'block';
-    });
-
-    showLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        registerModal.style.display = 'none';
-        loginModal.style.display = 'block';
-    });
-
-    // Handle form submissions
-    loginForm.addEventListener('submit', handleLogin);
-    registerForm.addEventListener('submit', handleRegister);
-
-    // Check if user is already logged in
-    checkAuthStatus();
+    // Check authentication status on page load
+    checkAuthState();
 }
 
-// Handle login
-function handleLogin(e) {
-    e.preventDefault();
+// Check authentication state
+function checkAuthState() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const username = localStorage.getItem("username");
     
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-
-    if (!username || !password) {
-        showError('Please fill in all fields');
-        return;
-    }
-
-    // Get users from localStorage
-    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        // Store current user session
-        localStorage.setItem('web3arcade_current_user', JSON.stringify(user));
-        
-        // Update UI
-        updateAuthUI(true);
-        
-        // Close modal
-        document.getElementById('loginModal').style.display = 'none';
-        
-        // Clear form
-        document.getElementById('loginForm').reset();
-        
-        // Show success message
-        showSuccess(`Welcome back, ${username}!`);
-        
-        // Load dashboard
-        loadDashboard();
+    console.log("Auth check - isLoggedIn:", isLoggedIn, "username:", username);
+    
+    if (isLoggedIn && username) {
+        console.log("User is logged in, updating UI to show games");
+        updateAuthUI(true, username);
     } else {
-        showError('Invalid username or password');
-    }
-}
-
-// Handle registration
-function handleRegister(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('registerUsername').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-
-    if (!username || !email || !password || !confirmPassword) {
-        showError('Please fill in all fields');
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        showError('Passwords do not match');
-        return;
-    }
-
-    if (password.length < 6) {
-        showError('Password must be at least 6 characters');
-        return;
-    }
-
-    // Check if user already exists
-    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
-    if (users.find(u => u.username === username)) {
-        showError('Username already exists');
-        return;
-    }
-
-    if (users.find(u => u.email === email)) {
-        showError('Email already exists');
-        return;
-    }
-
-    // Create new user
-    const newUser = {
-        id: Date.now(),
-        username,
-        email,
-        password,
-        createdAt: new Date().toISOString(),
-        gamesPlayed: [],
-        totalScore: 0,
-        achievements: []
-    };
-
-    // Save user
-    users.push(newUser);
-    localStorage.setItem('web3arcade_users', JSON.stringify(users));
-    localStorage.setItem('web3arcade_current_user', JSON.stringify(newUser));
-
-    // Update UI
-    updateAuthUI(true);
-    
-    // Close modal
-    document.getElementById('registerModal').style.display = 'none';
-    
-    // Clear form
-    document.getElementById('registerForm').reset();
-    
-    // Show success message
-    showSuccess('Account created successfully! Welcome to Web3 Arcade!');
-    
-    // Load dashboard
-    loadDashboard();
-}
-
-// Dashboard System
-function initializeDashboard() {
-    const logoutBtn = document.getElementById('logoutBtn');
-    
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
-}
-
-// Update authentication UI
-function updateAuthUI(isLoggedIn) {
-    const authButtons = document.querySelector('.auth-buttons');
-    const heroSection = document.getElementById('hero');
-    const playerDashboard = document.getElementById('playerDashboard');
-    const gamesSection = document.getElementById('games');
-
-    if (isLoggedIn) {
-        // Hide auth buttons
-        authButtons.style.display = 'none';
-        
-        // Hide hero and games sections
-        if (heroSection) heroSection.style.display = 'none';
-        if (gamesSection) gamesSection.style.display = 'none';
-        
-        // Show dashboard
-        if (playerDashboard) playerDashboard.style.display = 'block';
-    } else {
-        // Show auth buttons
-        authButtons.style.display = 'flex';
-        
-        // Show hero and games sections
-        if (heroSection) heroSection.style.display = 'block';
-        if (gamesSection) gamesSection.style.display = 'block';
-        
-        // Hide dashboard
-        if (playerDashboard) playerDashboard.style.display = 'none';
-    }
-}
-
-// Check authentication status
-function checkAuthStatus() {
-    const currentUser = localStorage.getItem('web3arcade_current_user');
-    if (currentUser) {
-        updateAuthUI(true);
-        loadDashboard();
-    } else {
+        console.log("User is not logged in, updating UI to show login message");
         updateAuthUI(false);
     }
 }
 
 // Handle logout
 function handleLogout() {
-    localStorage.removeItem('web3arcade_current_user');
-    updateAuthUI(false);
-    showSuccess('Logged out successfully');
+    localStorage.clear();
+    window.location.href = 'index.html';
 }
 
-// Load dashboard
-function loadDashboard() {
-    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
-    if (!currentUser) return;
-
-    // Update username
-    const usernameElement = document.getElementById('dashboardUsername');
-    if (usernameElement) {
-        usernameElement.textContent = currentUser.username;
-    }
-
-    // Update stats
-    updateDashboardStats(currentUser);
+// Show login prompt when user tries to play without being logged in
+function showLoginPrompt() {
+    console.log('Showing login prompt modal...');
     
-    // Load games grid
-    loadDashboardGames();
-}
-
-// Update dashboard stats
-function updateDashboardStats(user) {
-    const totalGamesElement = document.getElementById('totalGames');
-    const totalScoreElement = document.getElementById('totalScore');
-    const achievementsElement = document.getElementById('achievements');
-
-    if (totalGamesElement) totalGamesElement.textContent = user.gamesPlayed.length;
-    if (totalScoreElement) totalScoreElement.textContent = user.totalScore;
-    if (achievementsElement) achievementsElement.textContent = user.achievements.length;
-}
-
-// Load dashboard games
-function loadDashboardGames() {
-    const dashboardGamesGrid = document.getElementById('dashboardGamesGrid');
-    if (!dashboardGamesGrid) return;
-
-    // Get the original games grid content
-    const originalGamesGrid = document.querySelector('.games-grid');
-    if (!originalGamesGrid) return;
-
-    // Clone the games grid
-    const clonedGrid = originalGamesGrid.cloneNode(true);
-    clonedGrid.id = 'dashboardGamesGrid';
-    clonedGrid.className = 'games-grid dashboard-games-grid';
-
-    // Update each game card with progress and play button
-    const gameCards = clonedGrid.querySelectorAll('.parent');
-    gameCards.forEach(card => {
-        const gameName = card.dataset.game;
-        const progress = getGameProgress(gameName);
-        
-        // Add progress badge
-        const progressBadge = document.createElement('div');
-        progressBadge.className = 'progress-badge';
-        progressBadge.textContent = progress > 0 ? `${progress}%` : 'New';
-        card.querySelector('.card').appendChild(progressBadge);
-        
-        // Replace see-more link with play button
-        const seeMoreLink = card.querySelector('.see-more');
-        if (seeMoreLink) {
-            const playButton = document.createElement('button');
-            playButton.className = 'play-now-btn';
-            playButton.textContent = 'Play Now';
-            playButton.addEventListener('click', () => playGame(gameName));
-            seeMoreLink.parentNode.replaceChild(playButton, seeMoreLink);
+    const modal = document.createElement('div');
+    modal.className = 'login-prompt-modal';
+    modal.innerHTML = `
+        <div class="login-prompt-content">
+            <div class="login-prompt-icon">🔒</div>
+            <h3>Login Required</h3>
+            <p>Please log in or register to play games and track your progress.</p>
+            <div class="login-prompt-buttons">
+                <a href="login.html" class="auth-btn login-btn">Login</a>
+                <a href="register.html" class="auth-btn register-btn">Register</a>
+                <button class="auth-btn cancel-btn" onclick="closeLoginPrompt()">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    // Add styles
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+    `;
+    
+    document.body.appendChild(modal);
+    console.log('Login prompt modal added to page');
+    
+    // Add click outside to close
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeLoginPrompt();
         }
     });
-
-    // Replace the dashboard games grid
-    dashboardGamesGrid.innerHTML = '';
-    dashboardGamesGrid.appendChild(clonedGrid);
 }
 
-// Get game progress from localStorage
-function getGameProgress(gameName) {
-    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
-    if (!currentUser) return 0;
-
-    const gameRecord = currentUser.gamesPlayed.find(g => g.name === gameName);
-    return gameRecord ? gameRecord.progress || 0 : 0;
-}
-
-// Play game function
-function playGame(gameName) {
-    // Record game start
-    recordGameStart(gameName);
-    
-    // Navigate to game based on name
-    switch (gameName) {
-        case 'museum-treasure-hunt':
-            window.location.href = 'level1/index.html';
-            break;
-        case 'detective-case':
-            window.location.href = 'games/detective-case/detective-game-v2.html';
-            break;
-        case 'island-resource':
-            window.location.href = 'island-token-traders/index.html';
-            break;
-        default:
-            // For demo purposes, simulate game completion
-            simulateGameCompletion(gameName);
-            break;
+// Close login prompt
+function closeLoginPrompt() {
+    const modal = document.querySelector('.login-prompt-modal');
+    if (modal) {
+        modal.remove();
     }
 }
 
-// Record game start
-function recordGameStart(gameName) {
-    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
-    if (!currentUser) return;
+// Dashboard System (placeholder for future use)
+function initializeDashboard() {
+    // Dashboard functionality is handled in dashboard.html
+}
 
-    // Check if game already exists in user's history
-    let gameRecord = currentUser.gamesPlayed.find(g => g.name === gameName);
-    
-    if (!gameRecord) {
-        gameRecord = {
-            name: gameName,
-            startedAt: new Date().toISOString(),
-            progress: 0,
-            score: 0
-        };
-        currentUser.gamesPlayed.push(gameRecord);
-    }
+// Update authentication UI
+function updateAuthUI(isLoggedIn, username = null) {
+    const authButtons = document.querySelector('.auth-buttons');
+    const gamesGrid = document.getElementById('gamesGrid');
 
-    // Update localStorage
-    localStorage.setItem('web3arcade_current_user', JSON.stringify(currentUser));
-    
-    // Update users array
-    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
-    const userIndex = users.findIndex(u => u.id === currentUser.id);
-    if (userIndex !== -1) {
-        users[userIndex] = currentUser;
-        localStorage.setItem('web3arcade_users', JSON.stringify(users));
+    console.log("updateAuthUI called - isLoggedIn:", isLoggedIn, "username:", username);
+    console.log("Elements found - authButtons:", !!authButtons, "gamesGrid:", !!gamesGrid);
+
+    if (isLoggedIn && username) {
+        // Hide auth buttons and show dashboard link
+        if (authButtons) {
+            authButtons.innerHTML = `
+                <a href="dashboard.html" class="auth-btn login-btn">Dashboard</a>
+                <a href="#" class="auth-btn register-btn" onclick="handleLogout()">Logout</a>
+            `;
+        }
+        
+        // Games grid is always visible on index.html
+        console.log("User is logged in - games are visible and playable");
+        
+    } else {
+        // Show auth buttons
+        if (authButtons) {
+            authButtons.innerHTML = `
+                <a href="login.html" class="auth-btn login-btn">Login</a>
+                <a href="register.html" class="auth-btn register-btn">Register</a>
+            `;
+        }
+        
+        // Games grid is always visible on index.html, but clicking will prompt login
+        console.log("User is not logged in - games are visible but will prompt login when clicked");
     }
 }
 
-// Simulate game completion for demo
-function simulateGameCompletion(gameName) {
-    const currentUser = JSON.parse(localStorage.getItem('web3arcade_current_user'));
-    if (!currentUser) return;
 
-    // Find or create game record
-    let gameRecord = currentUser.gamesPlayed.find(g => g.name === gameName);
-    if (!gameRecord) {
-        gameRecord = {
-            name: gameName,
-            startedAt: new Date().toISOString(),
-            progress: 0,
-            score: 0
-        };
-        currentUser.gamesPlayed.push(gameRecord);
-    }
 
-    // Simulate completion
-    gameRecord.progress = 100;
-    gameRecord.score = Math.floor(Math.random() * 50) + 50; // Random score 50-100
-    gameRecord.completedAt = new Date().toISOString();
 
-    // Update total score
-    currentUser.totalScore += gameRecord.score;
-
-    // Update localStorage
-    localStorage.setItem('web3arcade_current_user', JSON.stringify(currentUser));
-    
-    // Update users array
-    const users = JSON.parse(localStorage.getItem('web3arcade_users') || '[]');
-    const userIndex = users.findIndex(u => u.id === currentUser.id);
-    if (userIndex !== -1) {
-        users[userIndex] = currentUser;
-        localStorage.setItem('web3arcade_users', JSON.stringify(users));
-    }
-
-    // Update dashboard
-    updateDashboardStats(currentUser);
-    loadDashboardGames();
-    
-    showSuccess(`🎮 ${gameName} completed! +${gameRecord.score} points earned!`);
-}
 
 // Notification system
 function showSuccess(message) {

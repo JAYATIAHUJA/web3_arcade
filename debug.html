@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Authentication</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-info { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Authentication Debug</h1>
+    
+    <div class="debug-info">
+        <h3>Current localStorage values:</h3>
+        <div id="localStorageInfo"></div>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Actions:</h3>
+        <button class="button" onclick="clearStorage()">Clear localStorage</button>
+        <button class="button" onclick="setLoggedIn()">Set as Logged In</button>
+        <button class="button" onclick="setLoggedOut()">Set as Logged Out</button>
+        <button class="button" onclick="refreshInfo()">Refresh Info</button>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Test Navigation:</h3>
+        <a href="index.html" class="button">Go to Index</a>
+        <a href="login.html" class="button">Go to Login</a>
+        <a href="dashboard.html" class="button">Go to Dashboard</a>
+    </div>
+
+    <script>
+        function refreshInfo() {
+            const info = document.getElementById('localStorageInfo');
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const username = localStorage.getItem('username');
+            const email = localStorage.getItem('email');
+            const totalScore = localStorage.getItem('totalScore');
+            const totalGames = localStorage.getItem('totalGames');
+            const achievements = localStorage.getItem('achievements');
+            const certificates = localStorage.getItem('certificates');
+            
+            info.innerHTML = `
+                <p><strong>isLoggedIn:</strong> ${isLoggedIn}</p>
+                <p><strong>username:</strong> ${username}</p>
+                <p><strong>email:</strong> ${email}</p>
+                <p><strong>totalScore:</strong> ${totalScore}</p>
+                <p><strong>totalGames:</strong> ${totalGames}</p>
+                <p><strong>achievements:</strong> ${achievements}</p>
+                <p><strong>certificates:</strong> ${certificates}</p>
+            `;
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            refreshInfo();
+        }
+        
+        function setLoggedIn() {
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('username', 'testuser');
+            localStorage.setItem('email', 'test@example.com');
+            localStorage.setItem('totalScore', '0');
+            localStorage.setItem('totalGames', '0');
+            localStorage.setItem('achievements', '0');
+            localStorage.setItem('certificates', '0');
+            refreshInfo();
+        }
+        
+        function setLoggedOut() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            localStorage.removeItem('email');
+            refreshInfo();
+        }
+        
+        // Load info on page load
+        refreshInfo();
+    </script>
+</body>
+</html>

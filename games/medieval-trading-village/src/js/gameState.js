@@ -1,6 +1,66 @@
 // Game State Management for Medieval Trading Village
 
 class GameState {
+    // Ledger entry for rejected/consensus fail
+    logLedgerEntry(trade, status, reason) {
+        const transaction = {
+            id: Date.now(),
+            blockNumber: this.ledger.length + 1,
+            timestamp: new Date().toISOString(),
+            from: 'Merchant',
+            to: trade.villager.name,
+            give: trade.give,
+            receive: trade.receive,
+            gasFee: parseFloat(trade.gasFee),
+            level: this.currentLevel,
+            isScam: trade.isScam || false,
+            status: status,
+            reason: reason
+        };
+        this.ledger.push(transaction);
+        this.saveGameState();
+    }
+
+    // Score logic
+    applySmartDecisionBonus() {
+        if (!this.stats.smartDecisions) this.stats.smartDecisions = 0;
+        this.stats.smartDecisions++;
+        if (!this.stats.score) this.stats.score = 0;
+        this.stats.score += 10;
+        this.saveGameState();
+    }
+    applyMissedOpportunityPenalty() {
+        if (!this.stats.missedOpportunities) this.stats.missedOpportunities = 0;
+        this.stats.missedOpportunities++;
+        if (!this.stats.score) this.stats.score = 0;
+        this.stats.score -= 5;
+        this.saveGameState();
+    }
+    applyLegitBonus() {
+        if (!this.stats.legitTrades) this.stats.legitTrades = 0;
+        this.stats.legitTrades++;
+        if (!this.stats.score) this.stats.score = 0;
+        this.stats.score += 5;
+        this.saveGameState();
+    }
+    applyScamPenalty() {
+        if (!this.stats.scamAccepted) this.stats.scamAccepted = 0;
+        this.stats.scamAccepted++;
+        if (!this.stats.score) this.stats.score = 0;
+        this.stats.score -= 15;
+        this.saveGameState();
+    }
+    applyConsensusFailPenalty(trade) {
+        if (!this.stats.consensusFails) this.stats.consensusFails = 0;
+        this.stats.consensusFails++;
+        if (!this.stats.score) this.stats.score = 0;
+        this.stats.score -= 3;
+        // Deduct gas fee only
+        this.inventory.gold -= parseFloat(trade.gasFee);
+        this.stats.totalGasFees += parseFloat(trade.gasFee);
+        this.saveGameState();
+        this.updateInventoryDisplay();
+    }
     constructor() {
         this.currentLevel = 1;
         this.inventory = {
